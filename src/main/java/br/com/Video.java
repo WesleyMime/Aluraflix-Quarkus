@@ -3,15 +3,19 @@ package br.com;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Video {
     private Long id;
 
+    @NotBlank
     private String title;
 
+    @NotBlank
     private String description;
 
+    @NotBlank
     private String url;
 
     @Id

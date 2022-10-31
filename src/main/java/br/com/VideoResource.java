@@ -1,12 +1,12 @@
 package br.com;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 import java.util.List;
 
 @Path("/videos")
@@ -21,5 +21,15 @@ public class VideoResource {
     public Response getAllVideos() {
         List<Video> videos = videoRepository.listAll();
         return Response.ok(videos).build();
+    }
+
+    @POST
+    @Transactional
+    public Response postVideo(@Valid Video video) {
+        videoRepository.persist(video);
+        if (videoRepository.isPersistent(video)) {
+            return Response.created(URI.create("/videos/" + video.getId())).entity(video).build();
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 }
