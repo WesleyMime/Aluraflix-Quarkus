@@ -1,6 +1,7 @@
 package br.com;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.MediaType;
@@ -14,6 +15,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 public class VideoResourceTest {
 
     @Test
+    @Order(1)
     public void testVideosEndpoint() {
         given()
           .when().get("/videos")
@@ -25,6 +27,7 @@ public class VideoResourceTest {
     }
 
     @Test
+    @Order(1)
     public void testVideoByIdEndpointOK() {
         given()
                 .when().get("/videos/1")
@@ -36,6 +39,7 @@ public class VideoResourceTest {
     }
 
     @Test
+    @Order(1)
     public void testVideoByIdEndpointKO() {
         given()
                 .when().get("/videos/999")
@@ -44,6 +48,7 @@ public class VideoResourceTest {
     }
 
     @Test
+    @Order(2)
     public void testPostVideoEndpointOK() {
         Video video = new Video();
         video.setTitle("title-4");
@@ -64,6 +69,7 @@ public class VideoResourceTest {
     }
 
     @Test
+    @Order(2)
     public void testPostVideoEndpointKO() {
         Video video = new Video();
         video.setTitle("title-4");
@@ -78,4 +84,23 @@ public class VideoResourceTest {
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
+    @Test
+    @Order(3)
+    public void testPutVideoEndpointOK() {
+        Video video = new Video();
+        video.setTitle("title");
+        video.setDescription("description");
+        video.setUrl("url");
+
+        given()
+                .when()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(video)
+                .put("/videos/4")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("title", containsString("title"))
+                .body("description", containsString("description"))
+                .body("url", containsString("url"));
+    }
 }

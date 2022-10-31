@@ -40,4 +40,17 @@ public class VideoResource {
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response updateVideo(@PathParam("id") Long id, @Valid Video updated) {
+        return videoRepository.findByIdOptional(id)
+                .map(video -> {
+                    video.setTitle(updated.getTitle());
+                    video.setDescription(updated.getDescription());
+                    video.setUrl(updated.getUrl());
+                    return Response.ok(video).build();
+                }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
 }
