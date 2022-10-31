@@ -23,6 +23,14 @@ public class VideoResource {
         return Response.ok(videos).build();
     }
 
+    @GET
+    @Path("/{id}")
+    public Response getVideoById(@PathParam("id") Long id) {
+        return videoRepository.findByIdOptional(id)
+                .map(video -> Response.ok(video).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
+
     @POST
     @Transactional
     public Response postVideo(@Valid Video video) {

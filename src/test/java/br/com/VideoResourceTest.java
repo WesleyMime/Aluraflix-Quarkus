@@ -25,6 +25,25 @@ public class VideoResourceTest {
     }
 
     @Test
+    public void testVideoByIdEndpointOK() {
+        given()
+                .when().get("/videos/1")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("title", containsString("title-1"))
+                .body("description", containsString("description-1"))
+                .body("url", containsString("url-1"));
+    }
+
+    @Test
+    public void testVideoByIdEndpointKO() {
+        given()
+                .when().get("/videos/999")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
     public void testPostVideoEndpointOK() {
         Video video = new Video();
         video.setTitle("title-4");
