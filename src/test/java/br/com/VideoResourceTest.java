@@ -1,8 +1,10 @@
 package br.com;
 
 import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -12,6 +14,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItems;
 
 @QuarkusTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VideoResourceTest {
 
     @Test
@@ -102,5 +105,14 @@ public class VideoResourceTest {
                 .body("title", containsString("title"))
                 .body("description", containsString("description"))
                 .body("url", containsString("url"));
+    }
+
+    @Test
+    @Order(4)
+    public void testDeleteEndpoint() {
+        given()
+                .delete("/videos/4")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
     }
 }

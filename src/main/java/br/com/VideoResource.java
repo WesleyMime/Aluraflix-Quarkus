@@ -53,4 +53,15 @@ public class VideoResource {
                     return Response.ok(video).build();
                 }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
+
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+    public Response deleteVideo(@PathParam("id") Long id) {
+        boolean deleted = videoRepository.deleteById(id);
+        if (deleted) {
+            return Response.ok().build();
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
 }
