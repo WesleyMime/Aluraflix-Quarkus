@@ -100,4 +100,14 @@ class CategoryResourceTest {
                 .body("titulo", containsString("title"))
                 .body("cor", containsString("color"));
     }
+
+    @Test
+    @Order(4)
+    public void testDeleteEndpoint() {
+        given()
+                .when()
+                .delete(CATEGORY_ENDPOINT + "/1")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
 }

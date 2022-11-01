@@ -94,7 +94,7 @@ public class VideoResourceTest {
 
     @Test
     @Order(3)
-    public void testPutVideoEndpointOK() {
+    public void testPutVideoEndpoint() {
         Video video = new Video();
         video.setTitulo("title");
         video.setDescricao("description");
