@@ -17,23 +17,27 @@ import static org.hamcrest.CoreMatchers.hasItems;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class VideoResourceTest {
 
+    public static final String VIDEOS_ENDPOINT = "/videos";
+
     @Test
     @Order(1)
     public void testVideosEndpoint() {
         given()
-          .when().get("/videos")
-          .then()
-             .statusCode(Response.Status.OK.getStatusCode())
-             .body("titulo", hasItems("title-1", "title-2", "title-3"))
-             .body("descricao", hasItems("description-1", "description-2", "description-3"))
-             .body("url", hasItems("url-1", "url-2", "url-3"));
+                .when()
+                .get(VIDEOS_ENDPOINT)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("titulo", hasItems("title-1", "title-2", "title-3"))
+                .body("descricao", hasItems("description-1", "description-2", "description-3"))
+                .body("url", hasItems("url-1", "url-2", "url-3"));
     }
 
     @Test
     @Order(1)
     public void testVideoByIdEndpointOK() {
         given()
-                .when().get("/videos/1")
+                .when()
+                .get(VIDEOS_ENDPOINT + "/1")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("titulo", containsString("title-1"))
@@ -45,7 +49,8 @@ public class VideoResourceTest {
     @Order(1)
     public void testVideoByIdEndpointKO() {
         given()
-                .when().get("/videos/999")
+                .when()
+                .get(VIDEOS_ENDPOINT + "/999")
                 .then()
                 .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
@@ -62,7 +67,7 @@ public class VideoResourceTest {
                 .when()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
-                .post("/videos")
+                .post(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .header("Location", containsString("/videos/4"))
@@ -82,7 +87,7 @@ public class VideoResourceTest {
                 .when()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
-                .post("/videos")
+                .post(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
@@ -99,7 +104,7 @@ public class VideoResourceTest {
                 .when()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
-                .put("/videos/4")
+                .put(VIDEOS_ENDPOINT + "/4")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("titulo", containsString("title"))
@@ -111,7 +116,7 @@ public class VideoResourceTest {
     @Order(4)
     public void testDeleteEndpoint() {
         given()
-                .delete("/videos/4")
+                .delete(VIDEOS_ENDPOINT + "/4")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
     }

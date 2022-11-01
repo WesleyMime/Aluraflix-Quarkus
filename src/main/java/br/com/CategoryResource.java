@@ -21,6 +21,15 @@ public class CategoryResource {
         return Response.ok(categoryRepository.listAll()).build();
     }
 
+    @GET
+    @Path("/{id}")
+    public Response getCategoryById(@PathParam("id") Long id) {
+        return categoryRepository.findByIdOptional(id)
+                .map(category -> Response.ok(category).build())
+                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+
+    }
+
     @POST
     @Transactional
     public Response postCategories(@Valid Category category) {
