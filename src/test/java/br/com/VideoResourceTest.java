@@ -64,9 +64,9 @@ public class VideoResourceTest {
         video.setUrl("url-4");
 
         given()
-                .when()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
+                .when()
                 .post(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
@@ -84,9 +84,9 @@ public class VideoResourceTest {
         video.setDescricao("description-4");
 
         given()
-                .when()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
+                .when()
                 .post(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
@@ -101,9 +101,9 @@ public class VideoResourceTest {
         video.setUrl("url");
 
         given()
-                .when()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
+                .when()
                 .put(VIDEOS_ENDPOINT + "/4")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())

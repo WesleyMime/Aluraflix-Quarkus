@@ -39,4 +39,16 @@ public class CategoryResource {
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
+
+    @PUT
+    @Path("/{id}")
+    @Transactional
+    public Response updateCategory(@PathParam("id") Long id, @Valid Category updated) {
+        return categoryRepository.findByIdOptional(id)
+                .map(category -> {
+                    category.setTitulo(updated.getTitulo());
+                    category.setCor(updated.getCor());
+                    return Response.ok(category).build();
+                }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+    }
 }

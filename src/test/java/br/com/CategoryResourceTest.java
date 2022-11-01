@@ -59,6 +59,7 @@ class CategoryResourceTest {
         given()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(category)
+                .when()
                 .post(CATEGORY_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
@@ -76,8 +77,27 @@ class CategoryResourceTest {
         given()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(category)
+                .when()
                 .post(CATEGORY_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    @Order(3)
+    public void testUpdateCategoryEndpoint() {
+        Category category = new Category();
+        category.setTitulo("title");
+        category.setCor("color");
+
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(category)
+                .when()
+                .put(CATEGORY_ENDPOINT + "/1")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("titulo", containsString("title"))
+                .body("cor", containsString("color"));
     }
 }
