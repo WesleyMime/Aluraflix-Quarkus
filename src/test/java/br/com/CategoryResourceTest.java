@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+
 class CategoryResourceTest {
 
     private static final String CATEGORY_ENDPOINT = "/categorias";

@@ -20,20 +20,20 @@ public class VideoResourceTest {
     public static final String VIDEOS_ENDPOINT = "/videos";
 
     @Test
-    @Order(1)
+    @Order(2)
     public void testVideosEndpoint() {
         given()
                 .when()
                 .get(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("titulo", hasItems("title-1", "title-2", "title-3"))
-                .body("descricao", hasItems("description-1", "description-2", "description-3"))
-                .body("url", hasItems("url-1", "url-2", "url-3"));
+                .body("titulo", hasItems("title-1"))
+                .body("descricao", hasItems("description-1"))
+                .body("url", hasItems("url-1"));
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     public void testVideoByIdEndpointOK() {
         given()
                 .when()
@@ -46,7 +46,7 @@ public class VideoResourceTest {
     }
 
     @Test
-    @Order(1)
+    @Order(2)
     public void testVideoByIdEndpointKO() {
         given()
                 .when()
@@ -56,12 +56,12 @@ public class VideoResourceTest {
     }
 
     @Test
-    @Order(2)
+    @Order(1)
     public void testPostVideoEndpointOK() {
         Video video = new Video();
-        video.setTitulo("title-4");
-        video.setDescricao("description-4");
-        video.setUrl("url-4");
+        video.setTitulo("title-1");
+        video.setDescricao("description-1");
+        video.setUrl("url-1");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,18 +70,18 @@ public class VideoResourceTest {
                 .post(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
-                .header("Location", containsString("/videos/4"))
-                .body("titulo", containsString("title-4"))
-                .body("descricao", containsString("description-4"))
-                .body("url", containsString("url-4"));;
+                .header("Location", containsString("/videos/1"))
+                .body("titulo", containsString("title-1"))
+                .body("descricao", containsString("description-1"))
+                .body("url", containsString("url-1"));
     }
 
     @Test
-    @Order(2)
+    @Order(1)
     public void testPostVideoEndpointKO() {
         Video video = new Video();
-        video.setTitulo("title-4");
-        video.setDescricao("description-4");
+        video.setTitulo("title-1");
+        video.setDescricao("description-1");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +104,7 @@ public class VideoResourceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(video)
                 .when()
-                .put(VIDEOS_ENDPOINT + "/4")
+                .put(VIDEOS_ENDPOINT + "/1")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("titulo", containsString("title"))
@@ -116,7 +116,7 @@ public class VideoResourceTest {
     @Order(4)
     public void testDeleteEndpoint() {
         given()
-                .delete(VIDEOS_ENDPOINT + "/4")
+                .delete(VIDEOS_ENDPOINT + "/1")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
     }
