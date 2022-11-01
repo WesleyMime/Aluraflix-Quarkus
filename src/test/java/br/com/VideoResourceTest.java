@@ -24,8 +24,8 @@ public class VideoResourceTest {
           .when().get("/videos")
           .then()
              .statusCode(Response.Status.OK.getStatusCode())
-             .body("title", hasItems("title-1", "title-2", "title-3"))
-             .body("description", hasItems("description-1", "description-2", "description-3"))
+             .body("titulo", hasItems("title-1", "title-2", "title-3"))
+             .body("descricao", hasItems("description-1", "description-2", "description-3"))
              .body("url", hasItems("url-1", "url-2", "url-3"));
     }
 
@@ -36,8 +36,8 @@ public class VideoResourceTest {
                 .when().get("/videos/1")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("title", containsString("title-1"))
-                .body("description", containsString("description-1"))
+                .body("titulo", containsString("title-1"))
+                .body("descricao", containsString("description-1"))
                 .body("url", containsString("url-1"));
     }
 
@@ -54,8 +54,8 @@ public class VideoResourceTest {
     @Order(2)
     public void testPostVideoEndpointOK() {
         Video video = new Video();
-        video.setTitle("title-4");
-        video.setDescription("description-4");
+        video.setTitulo("title-4");
+        video.setDescricao("description-4");
         video.setUrl("url-4");
 
         given()
@@ -66,8 +66,8 @@ public class VideoResourceTest {
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .header("Location", containsString("/videos/4"))
-                .body("title", containsString("title-4"))
-                .body("description", containsString("description-4"))
+                .body("titulo", containsString("title-4"))
+                .body("descricao", containsString("description-4"))
                 .body("url", containsString("url-4"));;
     }
 
@@ -75,8 +75,8 @@ public class VideoResourceTest {
     @Order(2)
     public void testPostVideoEndpointKO() {
         Video video = new Video();
-        video.setTitle("title-4");
-        video.setDescription("description-4");
+        video.setTitulo("title-4");
+        video.setDescricao("description-4");
 
         given()
                 .when()
@@ -91,8 +91,8 @@ public class VideoResourceTest {
     @Order(3)
     public void testPutVideoEndpointOK() {
         Video video = new Video();
-        video.setTitle("title");
-        video.setDescription("description");
+        video.setTitulo("title");
+        video.setDescricao("description");
         video.setUrl("url");
 
         given()
@@ -102,8 +102,8 @@ public class VideoResourceTest {
                 .put("/videos/4")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("title", containsString("title"))
-                .body("description", containsString("description"))
+                .body("titulo", containsString("title"))
+                .body("descricao", containsString("description"))
                 .body("url", containsString("url"));
     }
 

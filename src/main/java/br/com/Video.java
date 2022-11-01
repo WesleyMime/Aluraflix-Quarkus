@@ -10,10 +10,9 @@ public class Video {
     private Long id;
 
     @NotBlank
-    private String title;
+    private String titulo;
 
-    @NotBlank
-    private String description;
+    private String descricao;
 
     @NotBlank
     private String url;
@@ -28,20 +27,20 @@ public class Video {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescricao() {
+        return descricao;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getUrl() {

@@ -47,8 +47,8 @@ public class VideoResource {
     public Response updateVideo(@PathParam("id") Long id, @Valid Video updated) {
         return videoRepository.findByIdOptional(id)
                 .map(video -> {
-                    video.setTitle(updated.getTitle());
-                    video.setDescription(updated.getDescription());
+                    video.setTitulo(updated.getTitulo());
+                    video.setDescricao(updated.getDescricao());
                     video.setUrl(updated.getUrl());
                     return Response.ok(video).build();
                 }).orElse(Response.status(Response.Status.NOT_FOUND).build());
