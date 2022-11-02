@@ -8,6 +8,12 @@ import javax.enterprise.context.ApplicationScoped;
 public class VideoDTOMapper implements Mapper<Video, VideoDTO> {
     @Override
     public VideoDTO map(Video source) {
-        return new VideoDTO(source.getId(), source.getTitle(), source.getDescription(), source.getUrl());
+        return new VideoDTO(
+                source.getId(),
+                source.getTitle(),
+                source.getDescription(),
+                source.getUrl(),
+                source.getCategory().getId()
+        );
     }
 }

@@ -1,21 +1,24 @@
 package br.com.model.category;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import br.com.model.video.Video;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Category {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
 
     private String color;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Video> videos;
+
     public Long getId() {
         return id;
     }
@@ -38,5 +41,13 @@ public class Category {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public List<Video> getVideos() {
+        return videos;
+    }
+
+    public void setVideos(List<Video> videos) {
+        this.videos = videos;
     }
 }

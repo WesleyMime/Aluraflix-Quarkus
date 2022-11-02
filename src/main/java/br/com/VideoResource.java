@@ -1,5 +1,6 @@
 package br.com;
 
+import br.com.model.category.Category;
 import br.com.model.video.*;
 
 import javax.inject.Inject;
@@ -9,6 +10,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
+import java.util.Optional;
 
 @Path("/videos")
 @Produces(MediaType.APPLICATION_JSON)
@@ -17,6 +19,9 @@ public class VideoResource {
 
     @Inject
     private VideoRepository videoRepository;
+
+    @Inject
+    private CategoryRepository categoryRepository;
 
     @Inject
     private VideoDTOMapper dtoMapper;
@@ -45,10 +50,15 @@ public class VideoResource {
     public Response postVideo(@Valid VideoForm videoForm) {
         Video video = videoMapper.map(videoForm);
 
-        videoRepository.persist(video);
-        if (videoRepository.isPersistent(video)) {
-            VideoDTO dto = dtoMapper.map(video);
-            return Response.created(URI.create("/videos/" + dto.id())).entity(dto).build();
+        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
+
+        if (categoryOptional.isPresent()) {
+            video.setCategory(categoryOptional.get());
+            videoRepository.persist(video);
+            if (videoRepository.isPersistent(video)) {
+                VideoDTO dto = dtoMapper.map(video);
+                return Response.created(URI.create("/videos/" + dto.id())).entity(dto).build();
+            }
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -57,14 +67,20 @@ public class VideoResource {
     @Path("/{id}")
     @Transactional
     public Response updateVideo(@PathParam("id") Long id, @Valid VideoForm videoForm) {
-        return videoRepository.findByIdOptional(id)
-                .map(video -> {
-                    video.setTitle(videoForm.getTitulo());
-                    video.setDescription(videoForm.getDescricao());
-                    video.setUrl(videoForm.getUrl());
-                    VideoDTO dto = dtoMapper.map(video);
-                    return Response.ok(dto).build();
-                }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
+
+        if (categoryOptional.isPresent()) {
+            return videoRepository.findByIdOptional(id)
+                    .map(video -> {
+                        video.setTitle(videoForm.getTitulo());
+                        video.setDescription(videoForm.getDescricao());
+                        video.setUrl(videoForm.getUrl());
+                        video.setCategory(categoryOptional.get());
+                        VideoDTO dto = dtoMapper.map(video);
+                        return Response.ok(dto).build();
+                    }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        }
+        return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
     @DELETE

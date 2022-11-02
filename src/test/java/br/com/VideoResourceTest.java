@@ -60,7 +60,7 @@ public class VideoResourceTest {
     @Test
     @Order(1)
     public void testPostVideoEndpointOK() {
-        VideoForm video = new VideoForm("title-1", "description-1", URL);
+        VideoForm video = new VideoForm("title-1", "description-1", URL, 2L);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -78,7 +78,7 @@ public class VideoResourceTest {
     @Test
     @Order(1)
     public void testPostVideoEndpointKO() {
-        VideoForm video = new VideoForm("title-1", "description-1", "");
+        VideoForm video = new VideoForm("title-1", "description-1", "", 2L);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +92,7 @@ public class VideoResourceTest {
     @Test
     @Order(3)
     public void testPutVideoEndpoint() {
-        VideoForm video = new VideoForm("title", "description", URL);
+        VideoForm video = new VideoForm("title", "description", URL, 2L);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)

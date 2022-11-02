@@ -1,12 +1,14 @@
 package br.com.model.video;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import br.com.model.category.Category;
+
+import javax.persistence.*;
 
 @Entity
 public class Video {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -15,8 +17,9 @@ public class Video {
 
     private String url;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ManyToOne
+    private Category category;
+
     public Long getId() {
         return id;
     }
@@ -47,5 +50,13 @@ public class Video {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

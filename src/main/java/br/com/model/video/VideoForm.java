@@ -3,6 +3,7 @@ package br.com.model.video;
 import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class VideoForm {
 
@@ -16,10 +17,14 @@ public class VideoForm {
     @URL
     private String url;
 
-    public VideoForm(String titulo, String descricao, String url) {
+    @NotNull
+    private Long categoriaId;
+
+    public VideoForm(String titulo, String descricao, String url, Long categoriaId) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.url = url;
+        this.categoriaId = categoriaId;
     }
 
     public String getTitulo() {
@@ -34,6 +39,10 @@ public class VideoForm {
         return url;
     }
 
+    public Long getCategoriaId() {
+        return categoriaId;
+    }
+
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
@@ -44,5 +53,9 @@ public class VideoForm {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 }
