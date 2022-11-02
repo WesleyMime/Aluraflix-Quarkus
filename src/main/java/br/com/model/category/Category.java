@@ -16,7 +16,7 @@ public class Category {
 
     private String color;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Video> videos;
 
     public Long getId() {

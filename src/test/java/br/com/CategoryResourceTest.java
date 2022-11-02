@@ -51,6 +51,16 @@ class CategoryResourceTest {
     }
 
     @Test
+    @Order(2)
+    public void testVideosByCategoryEndpointOK() {
+        given()
+                .when()
+                .get(CATEGORY_ENDPOINT + "/1/videos")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
     @Order(1)
     public void testPostCategoryEndpointOK() {
         CategoryForm category = new CategoryForm("LIVRE", "FFFFFF");
