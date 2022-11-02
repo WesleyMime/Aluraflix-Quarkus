@@ -10,7 +10,6 @@ public class VideoForm {
     @NotBlank
     private String titulo;
 
-    @NotBlank
     private String descricao;
 
     @NotBlank
