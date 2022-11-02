@@ -1,21 +1,18 @@
-package br.com;
+package br.com.model.video;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Video {
     private Long id;
 
-    @NotBlank
-    private String titulo;
+    private String title;
 
-    private String descricao;
+    private String description;
 
-    @NotBlank
     private String url;
 
     @Id
@@ -28,20 +25,20 @@ public class Video {
         this.id = id;
     }
 
-    public String getTitulo() {
-        return titulo;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public String getDescricao() {
-        return descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getUrl() {

@@ -1,5 +1,7 @@
 package br.com;
 
+import br.com.model.category.*;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -16,26 +18,38 @@ public class CategoryResource {
     @Inject
     private CategoryRepository categoryRepository;
 
+    @Inject
+    private CategoryDTOMapper dtoMapper;
+
+    @Inject
+    private CategoryMapper categoryMapper;
+
     @GET
     public Response getAllCategories() {
-        return Response.ok(categoryRepository.listAll()).build();
+        return Response.ok(categoryRepository.listAll()
+                .stream()
+                .map(dtoMapper::map)).build();
     }
 
     @GET
     @Path("/{id}")
     public Response getCategoryById(@PathParam("id") Long id) {
         return categoryRepository.findByIdOptional(id)
-                .map(category -> Response.ok(category).build())
+                .map(dtoMapper::map)
+                .map(categoryDTO -> Response.ok(categoryDTO).build())
                 .orElse(Response.status(Response.Status.NOT_FOUND).build());
-
     }
 
     @POST
     @Transactional
-    public Response postCategories(@Valid Category category) {
+    public Response postCategories(@Valid CategoryForm categoryForm) {
+        Category category = categoryMapper.map(categoryForm);
+
         categoryRepository.persist(category);
         if (categoryRepository.isPersistent(category)) {
-            return Response.created(URI.create("/categorias/" + category.getId())).entity(category).build();
+            CategoryDTO dto = dtoMapper.map(category);
+
+            return Response.created(URI.create("/categorias/" + dto.id())).entity(dto).build();
         }
         return Response.status(Response.Status.BAD_REQUEST).build();
     }
@@ -43,12 +57,13 @@ public class CategoryResource {
     @PUT
     @Path("/{id}")
     @Transactional
-    public Response updateCategory(@PathParam("id") Long id, @Valid Category updated) {
+    public Response updateCategory(@PathParam("id") Long id, @Valid CategoryDTO categoryDTO) {
         return categoryRepository.findByIdOptional(id)
                 .map(category -> {
-                    category.setTitulo(updated.getTitulo());
-                    category.setCor(updated.getCor());
-                    return Response.ok(category).build();
+                    category.setTitle(categoryDTO.titulo());
+                    category.setColor(categoryDTO.cor());
+                    CategoryDTO dto = dtoMapper.map(category);
+                    return Response.ok(dto).build();
                 }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
 

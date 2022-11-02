@@ -1,5 +1,6 @@
 package br.com;
 
+import br.com.model.category.CategoryForm;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -14,7 +15,6 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-
 class CategoryResourceTest {
 
     private static final String CATEGORY_ENDPOINT = "/categorias";
@@ -53,9 +53,7 @@ class CategoryResourceTest {
     @Test
     @Order(1)
     public void testPostCategoryEndpointOK() {
-        Category category = new Category();
-        category.setTitulo("LIVRE");
-        category.setCor("FFFFFF");
+        CategoryForm category = new CategoryForm("LIVRE", "FFFFFF");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -72,8 +70,7 @@ class CategoryResourceTest {
     @Test
     @Order(1)
     public void testPostCategoryEndpointKO() {
-        Category category = new Category();
-        category.setTitulo("title-1");
+        CategoryForm category = new CategoryForm("LIVRE", "");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,9 +84,7 @@ class CategoryResourceTest {
     @Test
     @Order(3)
     public void testUpdateCategoryEndpoint() {
-        Category category = new Category();
-        category.setTitulo("title");
-        category.setCor("color");
+        CategoryForm category = new CategoryForm("title", "color");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)

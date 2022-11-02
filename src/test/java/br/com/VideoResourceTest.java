@@ -1,5 +1,6 @@
 package br.com;
 
+import br.com.model.video.VideoForm;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -18,6 +19,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 public class VideoResourceTest {
 
     public static final String VIDEOS_ENDPOINT = "/videos";
+    public static final String URL = "https://www.foo.com";
 
     @Test
     @Order(2)
@@ -29,7 +31,7 @@ public class VideoResourceTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("titulo", hasItems("title-1"))
                 .body("descricao", hasItems("description-1"))
-                .body("url", hasItems("url-1"));
+                .body("url", hasItems(URL));
     }
 
     @Test
@@ -42,7 +44,7 @@ public class VideoResourceTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("titulo", containsString("title-1"))
                 .body("descricao", containsString("description-1"))
-                .body("url", containsString("url-1"));
+                .body("url", containsString(URL));
     }
 
     @Test
@@ -58,10 +60,7 @@ public class VideoResourceTest {
     @Test
     @Order(1)
     public void testPostVideoEndpointOK() {
-        Video video = new Video();
-        video.setTitulo("title-1");
-        video.setDescricao("description-1");
-        video.setUrl("url-1");
+        VideoForm video = new VideoForm("title-1", "description-1", URL);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,15 +72,13 @@ public class VideoResourceTest {
                 .header("Location", containsString("/videos/1"))
                 .body("titulo", containsString("title-1"))
                 .body("descricao", containsString("description-1"))
-                .body("url", containsString("url-1"));
+                .body("url", containsString(URL));
     }
 
     @Test
     @Order(1)
     public void testPostVideoEndpointKO() {
-        Video video = new Video();
-        video.setTitulo("title-1");
-        video.setDescricao("description-1");
+        VideoForm video = new VideoForm("title-1", "description-1", "");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -95,10 +92,7 @@ public class VideoResourceTest {
     @Test
     @Order(3)
     public void testPutVideoEndpoint() {
-        Video video = new Video();
-        video.setTitulo("title");
-        video.setDescricao("description");
-        video.setUrl("url");
+        VideoForm video = new VideoForm("title", "description", URL);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,7 +103,7 @@ public class VideoResourceTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .body("titulo", containsString("title"))
                 .body("descricao", containsString("description"))
-                .body("url", containsString("url"));
+                .body("url", containsString(URL));
     }
 
     @Test
