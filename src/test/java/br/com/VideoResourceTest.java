@@ -36,6 +36,20 @@ public class VideoResourceTest {
 
     @Test
     @Order(2)
+    public void testVideoSearchEndpointOK() {
+        given()
+                .when()
+                .param("search", "1")
+                .get(VIDEOS_ENDPOINT)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("titulo", hasItems("title-1"))
+                .body("descricao", hasItems("description-1"))
+                .body("url", hasItems(URL));
+    }
+
+    @Test
+    @Order(2)
     public void testVideoByIdEndpointOK() {
         given()
                 .when()

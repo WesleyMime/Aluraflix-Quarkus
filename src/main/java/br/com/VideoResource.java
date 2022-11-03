@@ -30,7 +30,12 @@ public class VideoResource {
     private VideoMapper videoMapper;
 
     @GET
-    public Response getAllVideos() {
+    public Response getVideos(@QueryParam("search") String title) {
+        if (title != null) {
+            return Response.ok(videoRepository.findByTitle(title)
+                    .stream()
+                    .map(dtoMapper::map)).build();
+        }
         return Response.ok(videoRepository.listAll()
                 .stream()
                 .map(dtoMapper::map)).build();

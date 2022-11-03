@@ -3,6 +3,7 @@ package br.com.model.category;
 import br.com.model.video.Video;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +18,7 @@ public class Category {
     private String color;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<Video> videos;
+    private List<Video> videos = new ArrayList<>();
 
     public Long getId() {
         return id;
