@@ -1,68 +1,44 @@
-# aluraflix Project
+<h1 align="center"> Aluraflix </h1>
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+![](https://user-images.githubusercontent.com/55067868/200085508-0fcf6add-0c57-43a7-8db0-34b18ba7b51d.png#vitrinedev)
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.md)
+[![pt-br](https://img.shields.io/badge/lang-pt--br-g.svg)](https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.pt-br.md)
 
-## Running the application in dev mode
+## About the Challenge Backend
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
+Platform for sharing videos. The platform should allow the user to assemble playlists with links to their favorite videos, separated by categories.
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+## Project objectives
 
-## Packaging and running the application
+The project was developed in sprints lasting 1 week each, which had certain activities to be implemented. For better management of activities, trello was used.
 
-The application can be packaged using:
-```shell script
-./mvnw package
-```
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+- [Sprint 1 Trello](https://trello.com/b/Mj5x6lMZ/alura-challenge-backend-semana-1)
+- [Sprint 2 Trello](https://trello.com/b/5DavhAH7/alura-challenge-backend-semana-2)
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+## Technologies
 
-If you want to build an _über-jar_, execute the following command:
-```shell script
-./mvnw package -Dquarkus.package.type=uber-jar
-```
+The programming language, frameworks and technologies were of free choice. I chose to develop the project with the following technologies:
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+<img alt="Java" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="50" height="50" /> <img alt="Quarkus" src="https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg" width="50" height="50" /> <img alt="Postgres" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="50" height="50" /> <img alt="Docker" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-plain-wordmark.svg" width="50" height="50" /> <img alt="Google Cloud" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" width="50" height="50" /> <img alt="React" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original-wordmark.svg" width="50" height="50" />
 
-## Creating a native executable
 
-You can create a native executable using: 
-```shell script
-./mvnw package -Pnative
-```
+## Deploy
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using: 
-```shell script
-./mvnw package -Pnative -Dquarkus.native.container-build=true
-```
 
-You can then execute your native executable with: `./target/aluraflix-1.0.0-SNAPSHOT-runner`
+The application was deployed on a Google Cloud Compute Engine instance, which can be accessed through this link https://aluraflix-wmime.net/
 
-If you want to learn more about building native executables, please consult https://quarkus.io/guides/maven-tooling.
+To run locally you need to have Docker installed.
 
-## Related Guides
+- Open the terminal and clone the project using the command
+  "git clone https://github.com/WesleyMime/Aluraflix-Quarkus.git"
 
-- Hibernate ORM ([guide](https://quarkus.io/guides/hibernate-orm)): Define your persistent model with Hibernate ORM and JPA
-- RESTEasy Classic ([guide](https://quarkus.io/guides/resteasy)): REST endpoint framework implementing JAX-RS and more
-- JDBC Driver - PostgreSQL ([guide](https://quarkus.io/guides/datasource)): Connect to the PostgreSQL database via JDBC
+- Enter the "Aluraflix-Quarkus" folder and use the command "docker-compose up".
 
-## Provided Code
+If everything is working, the links to access are:
+- Front-end: http://localhost
+- Swagger-UI: http://localhost
 
-### Hibernate ORM
+## Documentation
 
-Create your first JPA entity
-
-[Related guide section...](https://quarkus.io/guides/hibernate-orm)
-
-### RESTEasy JAX-RS
-
-Easily start your RESTful Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started#the-jax-rs-resources)
+The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8YYEP4kk).

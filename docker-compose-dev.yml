@@ -3,7 +3,9 @@ version: '3.1'
 services:
 
   front:
-    image: "wesleymime/aluraflix_front"
+    build:
+      context: aluraflix-front
+      dockerfile: Dockerfile
     restart: always
     ports:
       - 80:3000
@@ -11,7 +13,9 @@ services:
       - api
 
   api:
-    image: "wesleymime/aluraflix_api"
+    build:
+      context: .
+      dockerfile: ./src/main/docker/Dockerfile.jvm
     restart: always
     ports:
       - 8080:8080
