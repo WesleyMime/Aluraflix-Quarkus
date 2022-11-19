@@ -3,6 +3,7 @@ package br.com;
 import br.com.model.category.*;
 import br.com.model.video.Video;
 import br.com.model.video.VideoDTOMapper;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @Tag(name = "Category Resource", description = "Category REST APIs")
+@Authenticated
 public class CategoryResource {
 
     @Inject

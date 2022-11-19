@@ -2,6 +2,7 @@ package br.com;
 
 import br.com.model.category.Category;
 import br.com.model.video.*;
+import io.quarkus.security.Authenticated;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @Tag(name = "Video Resource", description = "Video REST APIs")
+@Authenticated
 public class VideoResource {
 
     @Inject
@@ -50,8 +52,7 @@ public class VideoResource {
     )
     public Response getVideos(
             @Parameter(
-                    description = "Video title",
-                    required = false
+                    description = "Video title"
             )
             @QueryParam("search") String title) {
         if (title != null) {
