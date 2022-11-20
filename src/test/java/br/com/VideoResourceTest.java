@@ -2,6 +2,7 @@ package br.com;
 
 import br.com.model.video.VideoForm;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestSecurity(user = "testUser", roles = {"user"})
 public class VideoResourceTest {
 
     public static final String VIDEOS_ENDPOINT = "/videos";

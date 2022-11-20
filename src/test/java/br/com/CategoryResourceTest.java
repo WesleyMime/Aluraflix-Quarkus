@@ -2,6 +2,7 @@ package br.com;
 
 import br.com.model.category.CategoryForm;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestSecurity(user = "testUser", roles = {"user"})
 class CategoryResourceTest {
 
     private static final String CATEGORY_ENDPOINT = "/categorias";
