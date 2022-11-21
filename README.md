@@ -15,6 +15,7 @@ The project was developed in sprints lasting 1 week each, which had certain acti
 
 - [Sprint 1 Trello](https://trello.com/b/Mj5x6lMZ/alura-challenge-backend-semana-1)
 - [Sprint 2 Trello](https://trello.com/b/5DavhAH7/alura-challenge-backend-semana-2)
+- [Sprint 3 Trello](https://trello.com/b/STIogyU7/alura-challenge-backend-semana-3)
 
 ## Technologies
 
@@ -36,9 +37,9 @@ To run locally you need to have Docker installed.
 - Enter the "Aluraflix-Quarkus" folder and use the command "docker-compose up".
 
 If everything is working, the links to access are:
-- Front-end: http://localhost
-- Swagger-UI: http://localhost
+- Front-end: http://localhost:8080
+- API: http://localhost
 
 ## Documentation
 
-The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8YYEP4kk).
+The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8YmSsLns).
