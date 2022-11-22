@@ -38,6 +38,20 @@ public class VideoResourceTest {
 
     @Test
     @Order(2)
+    public void testFreeVideosEndpoint() {
+
+        given()
+                .when()
+                .get(VIDEOS_ENDPOINT + "/free")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("titulo", hasItems("title-2"))
+                .body("descricao", hasItems("description-2"))
+                .body("url", hasItems(URL));
+    }
+
+    @Test
+    @Order(2)
     public void testVideoSearchEndpointOK() {
         given()
                 .when()
@@ -76,11 +90,12 @@ public class VideoResourceTest {
     @Test
     @Order(1)
     public void testPostVideoEndpointOK() {
-        VideoForm video = new VideoForm("title-1", "description-1", URL, 2L);
+        VideoForm video1 = new VideoForm("title-1", "description-1", URL, 2L);
+        VideoForm video2 = new VideoForm("title-2", "description-2", URL, 3L);
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(video)
+                .body(video1)
                 .when()
                 .post(VIDEOS_ENDPOINT)
                 .then()
@@ -88,6 +103,18 @@ public class VideoResourceTest {
                 .header("Location", containsString("/videos/1"))
                 .body("titulo", containsString("title-1"))
                 .body("descricao", containsString("description-1"))
+                .body("url", containsString(URL));
+
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(video2)
+                .when()
+                .post(VIDEOS_ENDPOINT)
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode())
+                .header("Location", containsString("/videos/2"))
+                .body("titulo", containsString("title-2"))
+                .body("descricao", containsString("description-2"))
                 .body("url", containsString(URL));
     }
 

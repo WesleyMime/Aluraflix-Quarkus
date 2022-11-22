@@ -7,13 +7,13 @@ import javax.validation.constraints.NotBlank;
 @Schema(name = "Category", description = "Category representation")
 public class CategoryForm {
 
-    @Schema(example = "Titulo", required = true)
+    @Schema(example = "Title", required = true)
     @NotBlank
-    private String titulo;
+    private final String titulo;
 
     @Schema(example = "#2a7ae4", required = true)
     @NotBlank
-    private String cor;
+    private final String cor;
 
     public CategoryForm(String titulo, String cor) {
         this.titulo = titulo;
@@ -26,13 +26,5 @@ public class CategoryForm {
 
     public String getCor() {
         return cor;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setCor(String cor) {
-        this.cor = cor;
     }
 }

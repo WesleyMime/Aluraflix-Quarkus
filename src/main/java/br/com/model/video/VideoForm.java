@@ -11,19 +11,19 @@ public class VideoForm {
 
     @Schema(example = "Title", required = true)
     @NotBlank
-    private String titulo;
+    private final String titulo;
 
     @Schema(example = "Description", required = false)
-    private String descricao;
+    private final String descricao;
 
     @NotBlank
     @URL
     @Schema(example = "https://www.foo.com", required = true)
-    private String url;
+    private final String url;
 
     @NotNull
     @Schema(example = "1", required = true)
-    private Long categoriaId;
+    private final Long categoriaId;
 
     public VideoForm(String titulo, String descricao, String url, Long categoriaId) {
         this.titulo = titulo;
@@ -46,21 +46,5 @@ public class VideoForm {
 
     public Long getCategoriaId() {
         return categoriaId;
-    }
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setCategoriaId(Long categoriaId) {
-        this.categoriaId = categoriaId;
     }
 }

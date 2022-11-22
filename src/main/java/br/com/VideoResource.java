@@ -11,6 +11,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -61,6 +62,25 @@ public class VideoResource {
                     .map(dtoMapper::map)).build();
         }
         return Response.ok(videoRepository.listAll()
+                .stream()
+                .map(dtoMapper::map)).build();
+    }
+
+    @GET
+    @Path("/free")
+    @Operation(
+            operationId = "getFreeVideos",
+            summary = "Get videos without authentication",
+            description = "Get videos from category 'aluraflix' in the database"
+    )
+    @APIResponse(
+            responseCode = "200",
+            description = "Operation completed",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+    )
+    @PermitAll
+    public Response getFreeVideos() {
+        return Response.ok(videoRepository.find("category.title", "Aluraflix")
                 .stream()
                 .map(dtoMapper::map)).build();
     }
