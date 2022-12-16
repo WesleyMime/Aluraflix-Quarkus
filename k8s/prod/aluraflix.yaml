@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aluraflix
+  labels:
+    app: aluraflix
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aluraflix
+  template:
+    metadata:
+      labels:
+        app: aluraflix
+    spec:
+      containers:
+        - name: aluraflix
+          image: wesleymime/aluraflix_api
+          ports:
+            - containerPort: 8080
+          env:
+            - name: quarkus.datasource.username
+              value: postgres
+            - name: quarkus.datasource.jdbc.url
+              value: jdbc:postgresql://postgres-postgresql.default.svc.cluster.local:5432/aluraflix
+            - name: quarkus.datasource.password
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-postgresql
+                  key: postgres-password
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aluraflix-service
+spec:
+  selector:
+    app: aluraflix
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
