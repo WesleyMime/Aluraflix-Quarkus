@@ -14,9 +14,11 @@ spec:
       labels:
         app: aluraflix
     spec:
+      terminationGracePeriodSeconds: 30
       containers:
         - name: aluraflix
-          image: wesleymime/aluraflix_api
+          image: wesleymime/aluraflix_api:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           env:
