@@ -19,6 +19,9 @@ jobs:
       with:
         java-version: 19
 
+    - name: Run jwt key scripts
+      run: bash ./generate_jwtKeys.sh
+
     - name: Cache the Maven packages to speed up build
       uses: actions/cache@v1
       with:
