@@ -4,12 +4,10 @@ on:
  workflow_dispatch:
  push:
     branches: [ main ]
- pull_request:
-    branches: [ main ]
 
 jobs:
-  build_and_test:
-
+  build_test_deploy:
+    name: Build, Test and Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -31,3 +29,15 @@ jobs:
 
     - name: Build project with Maven
       run: mvn -B package --file pom.xml
+
+    - name: Login to Docker Hub
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build Container image
+      run: docker compose -f docker-compose-dev.yml build api
+
+    - name: Tag Docker image
+      run: docker tag aluraflix-quarkus-api wesleymime/aluraflix_api
+
+    - name: Publish Docker image
+      run: docker push wesleymime/aluraflix_api
