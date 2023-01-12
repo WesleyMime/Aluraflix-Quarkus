@@ -1,5 +1,6 @@
 package net.aluraflix.service;
 
+import io.quarkus.logging.Log;
 import net.aluraflix.model.category.*;
 import net.aluraflix.model.video.Video;
 import net.aluraflix.model.video.VideoDTOMapper;
@@ -27,12 +28,14 @@ public class CategoryService {
     VideoDTOMapper videoDTOMapper;
 
     public Response getAllCategories() {
+        Log.info("Get all categories.");
         return Response.ok(categoryRepository.listAll()
                 .stream()
                 .map(dtoMapper::map)).build();
     }
 
     public Response getCategoryById(Long id) {
+        Log.infov("Getting category by id {0}.", id);
         return categoryRepository.findByIdOptional(id)
                 .map(dtoMapper::map)
                 .map(categoryDTO -> Response.ok(categoryDTO).build())
@@ -40,6 +43,7 @@ public class CategoryService {
     }
 
     public Response getVideosByCategory(Long id) {
+        Log.infov("Getting videos by category id {0}.", id);
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(id);
 
         if (categoryOptional.isEmpty()) {
@@ -55,10 +59,12 @@ public class CategoryService {
 
         categoryRepository.persist(category);
         if (!categoryRepository.isPersistent(category)) {
+            Log.errorv("Post for category {0} failed.", categoryForm);
             return Response.serverError().build();
         }
 
         CategoryDTO dto = dtoMapper.map(category);
+        Log.infov("Successfully posted category id {0}.", dto.id());
         return Response.created(URI.create("/categorias/" + dto.id())).entity(dto).build();
     }
 
@@ -68,6 +74,7 @@ public class CategoryService {
                     category.setTitle(categoryForm.getTitulo());
                     category.setColor(categoryForm.getCor());
                     CategoryDTO dto = dtoMapper.map(category);
+                    Log.infov("Category id {0} updated.", id);
                     return Response.ok(dto).build();
                 }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -77,6 +84,7 @@ public class CategoryService {
         if (!deleted) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        Log.infov("Category id {0} deleted.", id);
         return Response.ok().build();
     }
 }

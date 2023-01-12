@@ -1,5 +1,6 @@
 package net.aluraflix.service;
 
+import io.quarkus.logging.Log;
 import net.aluraflix.model.category.Category;
 import net.aluraflix.model.category.CategoryRepository;
 import net.aluraflix.model.video.*;
@@ -28,22 +29,26 @@ public class VideoService {
 
     public Response getVideos(String title) {
         if (title != null) {
+            Log.infov("Getting video by title {0}.", title);
             return Response.ok(videoRepository.findByTitle(title)
                     .stream()
                     .map(dtoMapper::map)).build();
         }
+        Log.info("Getting all videos.");
         return Response.ok(videoRepository.listAll()
                 .stream()
                 .map(dtoMapper::map)).build();
     }
 
     public Response getFreeVideos() {
+        Log.info("Getting videos without authentication.");
         return Response.ok(videoRepository.find("category.title", "Aluraflix")
                 .stream()
                 .map(dtoMapper::map)).build();
     }
 
     public Response getVideoById(Long id) {
+        Log.infov("Getting videos by id {0}.", id);
         return videoRepository.findByIdOptional(id)
                 .map(dtoMapper::map)
                 .map(video -> Response.ok(video).build())
@@ -62,10 +67,12 @@ public class VideoService {
         video.setCategory(categoryOptional.get());
         videoRepository.persist(video);
         if (!videoRepository.isPersistent(video)) {
+            Log.errorv("Post for video {0} failed.", videoForm);
             return Response.serverError().build();
         }
 
         VideoDTO dto = dtoMapper.map(video);
+        Log.infov("Successfully posted video id {0}.", dto.id());
         return Response.created(URI.create("/videos/" + dto.id())).entity(dto).build();
     }
 
@@ -82,6 +89,7 @@ public class VideoService {
                     video.setUrl(videoForm.getUrl());
                     video.setCategory(categoryOptional.get());
                     VideoDTO dto = dtoMapper.map(video);
+                    Log.infov("Video id {0} updated.", id);
                     return Response.ok(dto).build();
                 }).orElse(Response.status(Response.Status.NOT_FOUND).build());
     }
@@ -91,6 +99,7 @@ public class VideoService {
         if (!deleted) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+        Log.infov("Video id {0} deleted.", id);
         return Response.ok().build();
     }
 }
