@@ -55,12 +55,12 @@ class VideoResourceTest {
     public void testVideoSearchEndpointOK() {
         given()
                 .when()
-                .param("search", "1")
+                .param("search", "2")
                 .get(VIDEOS_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .body("titulo", hasItems("title-1"))
-                .body("descricao", hasItems("description-1"))
+                .body("titulo", hasItems("title-2"))
+                .body("descricao", hasItems("description-2"))
                 .body("url", hasItems(URL));
     }
 
@@ -147,6 +147,16 @@ class VideoResourceTest {
                 .body("titulo", containsString("title"))
                 .body("descricao", containsString("description"))
                 .body("url", containsString(URL));
+
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(VIDEOS_ENDPOINT + "/1")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("titulo", containsString("title"))
+                .body("descricao", containsString("description"))
+                .body("url", containsString(URL));
     }
 
     @Test
@@ -156,5 +166,11 @@ class VideoResourceTest {
                 .delete(VIDEOS_ENDPOINT + "/1")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(VIDEOS_ENDPOINT + "/1")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 }

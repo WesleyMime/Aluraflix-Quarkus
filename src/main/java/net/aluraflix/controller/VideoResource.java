@@ -1,5 +1,6 @@
 package net.aluraflix.controller;
 
+import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
 import net.aluraflix.model.video.VideoForm;
 import net.aluraflix.service.VideoService;
@@ -16,10 +17,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 @Path("/videos")
 @Produces(MediaType.APPLICATION_JSON)
@@ -47,6 +46,10 @@ public class VideoResource {
                     description = "Video title"
             )
             @QueryParam("search") String title) {
+        if (title == null) {
+            title = "";
+            Log.info("Getting all videos.");
+        } else Log.infov("Getting video by title {0}.", title);
         return videoService.getVideos(title);
     }
 
@@ -64,6 +67,7 @@ public class VideoResource {
     )
     @PermitAll
     public Response getFreeVideos() {
+        Log.info("Getting videos without authentication.");
         return videoService.getFreeVideos();
     }
 
@@ -90,6 +94,7 @@ public class VideoResource {
                     required = true
             )
             @PathParam("id") Long id) {
+        Log.infov("Getting video id {0}.", id);
         return videoService.getVideoById(id);
     }
 
@@ -110,15 +115,19 @@ public class VideoResource {
             description = "Video not valid",
             content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
+    @APIResponse(
+            responseCode = "422",
+            description = "Invalid category id",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+    )
     public Response postVideo(
             @RequestBody(
                     description = "Video to create",
                     required = true,
                     content = @Content(schema = @Schema(implementation = VideoForm.class))
             )
-            @Valid VideoForm videoForm,
-            @Context SecurityContext sec) {
-        return videoService.postVideo(videoForm, sec);
+            @Valid VideoForm videoForm) {
+        return videoService.postVideo(videoForm);
     }
 
     @PUT
@@ -144,6 +153,11 @@ public class VideoResource {
             description = "Video not valid",
             content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
+    @APIResponse(
+            responseCode = "422",
+            description = "Invalid category id",
+            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+    )
     public Response updateVideo(
             @Parameter(
                     description = "Video id",
@@ -155,9 +169,8 @@ public class VideoResource {
                     required = true,
                     content = @Content(schema = @Schema(implementation = VideoForm.class))
             )
-            @Valid VideoForm videoForm,
-            @Context SecurityContext sec) {
-        return videoService.updateVideo(id, videoForm, sec);
+            @Valid VideoForm videoForm) {
+        return videoService.updateVideo(id, videoForm);
     }
 
     @DELETE
@@ -183,8 +196,7 @@ public class VideoResource {
                     description = "Video id",
                     required = true
             )
-            @PathParam("id") Long id,
-            @Context SecurityContext sec) {
-        return videoService.deleteVideo(id, sec);
+            @PathParam("id") Long id) {
+        return videoService.deleteVideo(id);
     }
 }

@@ -1,11 +1,15 @@
 package net.aluraflix.service;
 
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheResult;
+import io.quarkus.logging.Log;
 import net.aluraflix.model.category.*;
-import net.aluraflix.model.video.Video;
+import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.model.video.VideoDTOMapper;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
@@ -26,50 +30,71 @@ public class CategoryService {
     @Inject
     VideoDTOMapper videoDTOMapper;
 
+    @CacheResult(cacheName = "get-categories")
     public Response getAllCategories() {
-        return Response.ok(categoryRepository.listAll()
+        List<CategoryDTO> categoryDTOList = categoryRepository.listAll()
                 .stream()
-                .map(dtoMapper::map)).build();
-    }
-
-    public Response getCategoryById(Long id) {
-        return categoryRepository.findByIdOptional(id)
                 .map(dtoMapper::map)
-                .map(categoryDTO -> Response.ok(categoryDTO).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+                .toList();
+        return Response.ok(categoryDTOList).build();
     }
 
+    @CacheResult(cacheName = "category-id")
+    public Response getCategoryById(Long id) {
+        Optional<Category> optionalCategory = categoryRepository.findByIdOptional(id);
+
+        if (optionalCategory.isEmpty()) {
+            Log.infov("Category id {0} not found.", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        CategoryDTO categoryDTO = dtoMapper.map(optionalCategory.get());
+        return Response.ok(categoryDTO).build();
+    }
+
+    @CacheResult(cacheName = "videos-by-category")
     public Response getVideosByCategory(Long id) {
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(id);
 
         if (categoryOptional.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
-
-        List<Video> videos = categoryOptional.get().getVideos();
-        return Response.ok(videos.stream().map(videoDTOMapper::map)).build();
+        List<VideoDTO> videosDtoList = categoryOptional.get()
+                .getVideos()
+                .stream()
+                .map(videoDTOMapper::map)
+                .toList();
+        return Response.ok(videosDtoList).build();
     }
 
+    @Transactional
     public Response postCategories(CategoryForm categoryForm) {
         Category category = categoryMapper.map(categoryForm);
 
         categoryRepository.persist(category);
-        if (!categoryRepository.isPersistent(category)) {
-            return Response.serverError().build();
-        }
 
+        invalidateCache();
         CategoryDTO dto = dtoMapper.map(category);
+        Log.infov("Successfully posted category id {0}.", dto.id());
         return Response.created(URI.create("/categorias/" + dto.id())).entity(dto).build();
     }
 
+    @Transactional
     public Response updateCategory(Long id, CategoryForm categoryForm) {
-        return categoryRepository.findByIdOptional(id)
-                .map(category -> {
-                    category.setTitle(categoryForm.getTitulo());
-                    category.setColor(categoryForm.getCor());
-                    CategoryDTO dto = dtoMapper.map(category);
-                    return Response.ok(dto).build();
-                }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(id);
+
+        if (categoryOptional.isEmpty()) {
+            Log.infov("Category id {0} not found.", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Category category = categoryOptional.get();
+        category.setTitle(categoryForm.getTitulo());
+        category.setColor(categoryForm.getCor());
+        CategoryDTO dto = dtoMapper.map(category);
+
+        invalidateCache();
+        Log.infov("Category id {0} updated.", id);
+        return  Response.ok(dto).build();
     }
 
     public Response deleteCategory(Long id) {
@@ -77,6 +102,14 @@ public class CategoryService {
         if (!deleted) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        invalidateCache();
+        Log.infov("Category id {0} deleted.", id);
         return Response.ok().build();
     }
+
+    @CacheInvalidateAll(cacheName = "get-categories")
+    @CacheInvalidateAll(cacheName = "category-id")
+    @CacheInvalidateAll(cacheName = "videos-by-category")
+    void invalidateCache() {}
 }

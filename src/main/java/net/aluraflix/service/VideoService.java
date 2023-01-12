@@ -1,14 +1,18 @@
 package net.aluraflix.service;
 
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheResult;
+import io.quarkus.logging.Log;
 import net.aluraflix.model.category.Category;
 import net.aluraflix.model.category.CategoryRepository;
 import net.aluraflix.model.video.*;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -26,71 +30,107 @@ public class VideoService {
     @Inject
     VideoMapper videoMapper;
 
+    @CacheResult(cacheName = "get-videos")
     public Response getVideos(String title) {
-        if (title != null) {
-            return Response.ok(videoRepository.findByTitle(title)
+        if (title.isEmpty()) {
+            List<VideoDTO> videoDTOList = videoRepository.listAll()
                     .stream()
-                    .map(dtoMapper::map)).build();
+                    .map(dtoMapper::map)
+                    .toList();
+            return Response.ok(videoDTOList).build();
         }
-        return Response.ok(videoRepository.listAll()
-                .stream()
-                .map(dtoMapper::map)).build();
-    }
 
-    public Response getFreeVideos() {
-        return Response.ok(videoRepository.find("category.title", "Aluraflix")
+        List<VideoDTO> videoDTOList = videoRepository.findByTitle(title)
                 .stream()
-                .map(dtoMapper::map)).build();
-    }
-
-    public Response getVideoById(Long id) {
-        return videoRepository.findByIdOptional(id)
                 .map(dtoMapper::map)
-                .map(video -> Response.ok(video).build())
-                .orElse(Response.status(Response.Status.NOT_FOUND).build());
+                .toList();
+        return Response.ok(videoDTOList).build();
     }
 
-    public Response postVideo(VideoForm videoForm, SecurityContext sec) {
+    @CacheResult(cacheName = "free-videos")
+    public Response getFreeVideos() {
+        List<VideoDTO> videoDTOList = videoRepository.find("category.title", "Aluraflix")
+                .stream()
+                .map(dtoMapper::map)
+                .toList();
+        return Response.ok(videoDTOList).build();
+    }
+
+    @CacheResult(cacheName = "videos-id")
+    public Response getVideoById(Long id) {
+        Optional<Video> optionalVideo = videoRepository.findByIdOptional(id);
+
+        if (optionalVideo.isEmpty()) {
+            Log.infov("Video id {0} not found.", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        VideoDTO videoDTO = dtoMapper.map(optionalVideo.get());
+        return Response.ok(videoDTO).build();
+    }
+
+    @Transactional
+    public Response postVideo(VideoForm videoForm) {
         Video video = videoMapper.map(videoForm);
 
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
 
         if (categoryOptional.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            Log.infov("Video with invalid category id: {0}.",videoForm.getCategoriaId());
+            return Response.status(422).build();
         }
-
         video.setCategory(categoryOptional.get());
-        videoRepository.persist(video);
-        if (!videoRepository.isPersistent(video)) {
-            return Response.serverError().build();
-        }
 
+        videoRepository.persist(video);
+
+        invalidateCache();
         VideoDTO dto = dtoMapper.map(video);
+        Log.infov("Successfully posted video id {0}.", dto.id());
         return Response.created(URI.create("/videos/" + dto.id())).entity(dto).build();
     }
 
-    public Response updateVideo(Long id, VideoForm videoForm, SecurityContext sec) {
+    @Transactional
+    public Response updateVideo(Long id, VideoForm videoForm) {
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
 
         if (categoryOptional.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            Log.infov("Video with invalid category id: {0}.",videoForm.getCategoriaId());
+            return Response.status(422).build();
         }
-        return videoRepository.findByIdOptional(id)
-                .map(video -> {
-                    video.setTitle(videoForm.getTitulo());
-                    video.setDescription(videoForm.getDescricao());
-                    video.setUrl(videoForm.getUrl());
-                    video.setCategory(categoryOptional.get());
-                    VideoDTO dto = dtoMapper.map(video);
-                    return Response.ok(dto).build();
-                }).orElse(Response.status(Response.Status.NOT_FOUND).build());
+        Optional<Video> videoOptional = videoRepository.findByIdOptional(id);
+        if (videoOptional.isEmpty()) {
+            Log.infov("Video id {0} not found.", id);
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        Video video = videoOptional.get();
+        video.setTitle(videoForm.getTitulo());
+        video.setDescription(videoForm.getDescricao());
+        video.setUrl(videoForm.getUrl());
+        video.setCategory(categoryOptional.get());
+        video.setCategory(categoryOptional.get());
+        VideoDTO dto = dtoMapper.map(video);
+
+        invalidateCache();
+        Log.infov("Video id {0} updated.", id);
+        return Response.ok(dto).build();
     }
 
-    public Response deleteVideo(Long id, SecurityContext sec) {
+    public Response deleteVideo(Long id) {
         boolean deleted = videoRepository.deleteById(id);
         if (!deleted) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        invalidateCache();
+        Log.infov("Video id {0} deleted.", id);
         return Response.ok().build();
     }
+
+    @CacheInvalidateAll(cacheName = "get-videos")
+    @CacheInvalidateAll(cacheName = "free-videos")
+    @CacheInvalidateAll(cacheName = "videos-id")
+    @CacheInvalidateAll(cacheName = "get-categories")
+    @CacheInvalidateAll(cacheName = "category-id")
+    @CacheInvalidateAll(cacheName = "videos-by-category")
+    void invalidateCache() {}
 }

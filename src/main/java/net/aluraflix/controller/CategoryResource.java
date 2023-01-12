@@ -1,5 +1,6 @@
 package net.aluraflix.controller;
 
+import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
 import net.aluraflix.model.category.CategoryForm;
 import net.aluraflix.service.CategoryService;
@@ -40,6 +41,7 @@ public class CategoryResource {
             content = @Content(mediaType = MediaType.APPLICATION_JSON)
     )
     public Response getAllCategories() {
+        Log.info("Get all categories.");
         return categoryService.getAllCategories();
     }
 
@@ -66,6 +68,7 @@ public class CategoryResource {
                     required = true
             )
             @PathParam("id") Long id) {
+        Log.infov("Getting category by id {0}.", id);
         return categoryService.getCategoryById(id);
     }
 
@@ -92,6 +95,7 @@ public class CategoryResource {
                     required = true
             )
             @PathParam("id") Long id) {
+        Log.infov("Getting videos by category id {0}.", id);
         return categoryService.getVideosByCategory(id);
     }
 
