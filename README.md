@@ -21,12 +21,12 @@ The project was developed in sprints lasting 1 week each, which had certain acti
 
 The programming language, frameworks and technologies were of free choice. I chose to develop the project with the following technologies:
 
-<img alt="Java" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="50" height="50" /> <img alt="Quarkus" src="https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg" width="50" height="50" /> <img alt="Postgresql" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="50" height="50" /> <img alt="Docker" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-plain-wordmark.svg" width="50" height="50" /> <img alt="Google Cloud" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/googlecloud/googlecloud-original.svg" width="50" height="50" /> <img alt="Azure" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/azure/azure-original-wordmark.svg" width="50" height="50" /> <img alt="Kubernetes" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain-wordmark.svg" width="50" height="50" />
+<img alt="Java" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="50" height="50" /> <img alt="Quarkus" src="https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg" width="50" height="50" /> <img alt="Postgresql" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="50" height="50" /> <img alt="Docker" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-plain-wordmark.svg" width="50" height="50" /> <img alt="Kubernetes" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain-wordmark.svg" width="50" height="50" />
 
 ## Deploy
 
 
-The application was deployed on Azure Kubernetes Service (AKS), which can be accessed through this link https://aluraflix-wmime.net/
+The application can be accessed through this link https://aluraflix-wmime.net/
 
 To run locally you need to have Docker installed.
 
@@ -41,4 +41,4 @@ If everything is working, the links to access are:
 
 ## Documentation
 
-The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8YmSsLns).
+The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8ZDSc5f2).

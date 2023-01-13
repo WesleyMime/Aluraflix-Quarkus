@@ -2,7 +2,9 @@ package net.aluraflix.controller;
 
 import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
+import net.aluraflix.model.category.CategoryDTO;
 import net.aluraflix.model.category.CategoryForm;
+import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.service.CategoryService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -37,8 +39,10 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Operation completed",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Operation Completed",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = CategoryDTO[].class))
     )
     public Response getAllCategories() {
         Log.info("Get all categories.");
@@ -54,13 +58,14 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Operation completed",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Operation Completed",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = CategoryDTO.class))
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Not Found"
     )
     public Response getCategoryById(
             @Parameter(
@@ -81,13 +86,14 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Operation completed",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Operation Completed",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = VideoDTO[].class))
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Not Found"
     )
     public Response getVideosByCategory(
             @Parameter(
@@ -108,13 +114,14 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "201",
-            description = "Category created",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Created",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = CategoryDTO.class))
     )
     @APIResponse(
             responseCode = "400",
-            description = "Category not valid",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Not Valid"
     )
     public Response postCategories(
             @RequestBody(
@@ -136,18 +143,18 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Category updated",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Updated",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = CategoryDTO.class))
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Not Found"
     )
     @APIResponse(
             responseCode = "400",
-            description = "Category not valid",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Not Valid"
     )
     public Response updateCategory(
             @Parameter(
@@ -174,13 +181,11 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Category deleted",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Deleted"
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Category Not Found"
     )
     public Response deleteCategory(
             @Parameter(

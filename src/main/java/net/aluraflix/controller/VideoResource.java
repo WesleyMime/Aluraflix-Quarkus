@@ -2,6 +2,7 @@ package net.aluraflix.controller;
 
 import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
+import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.model.video.VideoForm;
 import net.aluraflix.service.VideoService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -38,8 +39,10 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Operation completed",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Operation Completed",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = VideoDTO[].class))
     )
     public Response getVideos(
             @Parameter(
@@ -62,8 +65,10 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Operation completed",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Operation Completed",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = VideoDTO[].class))
     )
     @PermitAll
     public Response getFreeVideos() {
@@ -80,13 +85,14 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Operation completed",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Operation Completed",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = VideoDTO.class))
     )
     @APIResponse(
             responseCode = "404",
-            description = "Video not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Not Found"
     )
     public Response getVideoById(
             @Parameter(
@@ -107,18 +113,18 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "201",
-            description = "Video created",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Created",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = VideoDTO.class))
     )
     @APIResponse(
             responseCode = "400",
-            description = "Video not valid",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Not Valid"
     )
     @APIResponse(
             responseCode = "422",
-            description = "Invalid category id",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Invalid Category Id"
     )
     public Response postVideo(
             @RequestBody(
@@ -140,23 +146,22 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Video updated",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Updated",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = VideoDTO.class))
     )
     @APIResponse(
             responseCode = "404",
-            description = "Video not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Not Found"
     )
     @APIResponse(
             responseCode = "400",
-            description = "Video not valid",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Not Valid"
     )
     @APIResponse(
             responseCode = "422",
-            description = "Invalid category id",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Invalid Category Id"
     )
     public Response updateVideo(
             @Parameter(
@@ -183,13 +188,11 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "200",
-            description = "Video deleted",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Deleted"
     )
     @APIResponse(
             responseCode = "404",
-            description = "Video not found",
-            content = @Content(mediaType = MediaType.APPLICATION_JSON)
+            description = "Video Not Found"
     )
     public Response deleteVideo(
             @Parameter(
