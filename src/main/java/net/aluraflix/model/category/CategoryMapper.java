@@ -14,4 +14,10 @@ public class CategoryMapper implements Mapper<CategoryForm, Category> {
         category.setColor(source.getCor());
         return category;
     }
+
+    public Category map(Category category, CategoryForm form) {
+        category.setTitle(form.getTitulo());
+        category.setColor(form.getCor());
+        return category;
+    }
 }

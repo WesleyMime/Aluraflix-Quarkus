@@ -14,4 +14,11 @@ public class VideoMapper implements Mapper<VideoForm, Video> {
         video.setUrl(source.getUrl());
         return video;
     }
+
+    public Video map(Video video, VideoForm form) {
+        video.setTitle(form.getTitulo());
+        video.setDescription(form.getDescricao());
+        video.setUrl(form.getUrl());
+        return video;
+    }
 }

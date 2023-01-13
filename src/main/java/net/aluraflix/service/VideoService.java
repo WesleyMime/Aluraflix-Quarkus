@@ -102,17 +102,12 @@ public class VideoService {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        Video video = videoOptional.get();
-        video.setTitle(videoForm.getTitulo());
-        video.setDescription(videoForm.getDescricao());
-        video.setUrl(videoForm.getUrl());
+        Video video = videoMapper.map(videoOptional.get(), videoForm);
         video.setCategory(categoryOptional.get());
-        video.setCategory(categoryOptional.get());
-        VideoDTO dto = dtoMapper.map(video);
 
         invalidateCache();
         Log.infov("Video id {0} updated.", id);
-        return Response.ok(dto).build();
+        return Response.ok(dtoMapper.map(video)).build();
     }
 
     public Response deleteVideo(Long id) {

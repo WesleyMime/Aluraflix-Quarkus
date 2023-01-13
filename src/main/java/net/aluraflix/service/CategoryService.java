@@ -87,14 +87,11 @@ public class CategoryService {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
-        Category category = categoryOptional.get();
-        category.setTitle(categoryForm.getTitulo());
-        category.setColor(categoryForm.getCor());
-        CategoryDTO dto = dtoMapper.map(category);
+        Category category = categoryMapper.map(categoryOptional.get(), categoryForm);
 
         invalidateCache();
         Log.infov("Category id {0} updated.", id);
-        return  Response.ok(dto).build();
+        return  Response.ok(dtoMapper.map(category)).build();
     }
 
     public Response deleteCategory(Long id) {
