@@ -3,6 +3,7 @@ package net.aluraflix.model.video;
 import net.aluraflix.service.Mapper;
 
 import javax.enterprise.context.ApplicationScoped;
+import java.util.List;
 
 @ApplicationScoped
 public class VideoDTOMapper implements Mapper<Video, VideoDTO> {
@@ -15,5 +16,10 @@ public class VideoDTOMapper implements Mapper<Video, VideoDTO> {
                 source.getUrl(),
                 source.getCategory().getId()
         );
+    }
+
+    @Override
+    public List<VideoDTO> map(List<Video> source) {
+        return source.stream().map(this::map).toList();
     }
 }

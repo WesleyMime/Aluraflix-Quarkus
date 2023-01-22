@@ -40,12 +40,14 @@ public class AuthResource {
     @APIResponse(
             responseCode = "200",
             description = "Operation completed",
-            content = @Content(mediaType = MediaType.TEXT_PLAIN)
+            content = @Content(
+                    mediaType = MediaType.TEXT_PLAIN,
+                    schema = @Schema(implementation = String.class),
+                    example = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9")
     )
     @APIResponse(
             responseCode = "401",
-            description = "Invalid username and password",
-            content = @Content(mediaType = MediaType.TEXT_PLAIN)
+            description = "Invalid username and password"
     )
     public Response login(
             @RequestBody(

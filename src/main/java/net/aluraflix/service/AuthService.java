@@ -30,12 +30,7 @@ public class AuthService {
         if (Client.find("username", clientForm.username).firstResultOptional().isPresent()) {
             return Response.status(Response.Status.CONFLICT).build();
         }
-
-        Client client = Client.add(clientForm.username, clientForm.password, "user");
-        if (!client.isPersistent()) {
-            Log.errorv("Client {0} not persisted.",  clientForm.username);
-            return Response.status(Response.Status.BAD_REQUEST).build();
-        }
+        Client.add(clientForm.username, clientForm.password, "user");
         Log.info("Successful registration.");
         return Response.status(Response.Status.CREATED).build();
     }

@@ -15,8 +15,13 @@ public class CategoryDTOMapper implements Mapper<Category, CategoryDTO> {
     private VideoDTOMapper videoDTOMapper;
     @Override
     public CategoryDTO map(Category source) {
-        List<VideoDTO> videoDTOS = source.getVideos().stream().map(videoDTOMapper::map).toList();
+        List<VideoDTO> videoDTOList = videoDTOMapper.map(source.getVideos());
 
-        return new CategoryDTO(source.getId(), source.getTitle(), source.getColor(), videoDTOS);
+        return new CategoryDTO(source.getId(), source.getTitle(), source.getColor(), videoDTOList);
+    }
+
+    @Override
+    public List<CategoryDTO> map(List<Category> source) {
+        return source.stream().map(this::map).toList();
     }
 }
