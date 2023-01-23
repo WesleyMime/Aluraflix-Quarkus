@@ -4,8 +4,8 @@ import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
 import net.aluraflix.model.category.CategoryDTO;
 import net.aluraflix.model.category.CategoryForm;
-import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.service.CategoryService;
+import net.aluraflix.service.Cursor;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -42,7 +42,7 @@ public class CategoryResource {
             description = "Operation Completed",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = CategoryDTO[].class))
+                    schema = @Schema(example = EXAMPLE))
     )
     public Response getAllCategories(
             @Parameter(
@@ -94,7 +94,7 @@ public class CategoryResource {
             description = "Operation Completed",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = VideoDTO[].class))
+                    schema = @Schema(implementation = Cursor.class))
     )
     @APIResponse(
             responseCode = "404",
@@ -205,4 +205,26 @@ public class CategoryResource {
             @PathParam("id") Long id) {
         return categoryService.deleteCategory(id);
     }
+
+    private static final String EXAMPLE = """
+                            {
+                              "items": [
+                                {
+                                  "id": 0,
+                                  "titulo": "string",
+                                  "cor": "string",
+                                  "videos": [
+                                    {
+                                      "id": 0,
+                                      "titulo": "string",
+                                      "descricao": "string",
+                                      "url": "string",
+                                      "categoriaId": 0
+                                    }
+                                  ]
+                                }
+                              ],
+                              "next": 0
+                            }
+                            """;
 }

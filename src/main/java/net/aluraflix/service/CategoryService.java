@@ -42,7 +42,7 @@ public class CategoryService {
         List<Category> categoryList = categoryRepository.findWithPaging(cursor, PAGE_SIZE_LIMIT);
         showOnlyFiveVideosPerCategory(categoryList);
 
-        String next = getNextIdForPaging(categoryList);
+        Long next = getNextIdForPaging(categoryList);
 
         List<CategoryDTO> categoryDtoList = dtoMapper.map(categoryList);
         return Response.ok(new Cursor<>(categoryDtoList, next)).build();
@@ -58,12 +58,12 @@ public class CategoryService {
         });
     }
 
-    static String getNextIdForPaging(List<Category> categoryList) {
-        String next = null;
+    static Long getNextIdForPaging(List<Category> categoryList) {
+        Long next = null;
         if (categoryList.size() == PAGE_SIZE_LIMIT) {
             Category category = categoryList.get(categoryList.size() - 1);
             categoryList.remove(category);
-            next = String.valueOf(category.getId());
+            next = category.getId();
         }
         return next;
     }
@@ -91,7 +91,7 @@ public class CategoryService {
 
         List<Video> videoList = videoRepository.findVideosByCategoryId(id, cursor, PAGE_SIZE_LIMIT);
 
-        String next = VideoService.getNextIdForPaging(videoList);
+        Long next = VideoService.getNextIdForPaging(videoList);
 
         List<VideoDTO> videoDtoList = videoDTOMapper.map(videoList);
         return Response.ok(new Cursor<>(videoDtoList, next)).build();
@@ -104,9 +104,10 @@ public class CategoryService {
         categoryRepository.persist(category);
 
         invalidateCache();
-        CategoryDTO dto = dtoMapper.map(category);
-        Log.infov("Successfully posted category id {0}.", dto.id());
-        return Response.created(URI.create("/categorias/" + dto.id())).entity(dto).build();
+        CategoryDTO categoryDTO = dtoMapper.map(category);
+        Long categoryId = categoryDTO.id();
+        Log.infov("Successfully posted category id {0}.", categoryId);
+        return Response.created(URI.create("/categorias/" + categoryId)).entity(categoryDTO).build();
     }
 
     @Transactional
@@ -128,6 +129,7 @@ public class CategoryService {
     public Response deleteCategory(Long id) {
         boolean deleted = categoryRepository.deleteById(id);
         if (!deleted) {
+            Log.infov("Category id {0} not found.", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 

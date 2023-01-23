@@ -33,36 +33,36 @@ public class VideoService {
     private static final Integer PAGE_SIZE_LIMIT = 6;
 
     @CacheResult(cacheName = "get-videos")
-    public Response getVideos(String title, Long cursor) {
-        if (title.isEmpty()) {
-            List<Video> videoList = videoRepository.findWithPaging(cursor, PAGE_SIZE_LIMIT);
-            String next = getNextIdForPaging(videoList);
+    public Response getVideos(Long cursor) {
+        List<Video> videoList = videoRepository.findWithPaging(cursor, PAGE_SIZE_LIMIT);
+        Long next = getNextIdForPaging(videoList);
 
-            List<VideoDTO> videoDTOList = dtoMapper.map(videoList);
-            return Response.ok(new Cursor<>(videoDTOList, next)).build();
-        }
+        List<VideoDTO> videoDTOList = dtoMapper.map(videoList);
+        return Response.ok(new Cursor<>(videoDTOList, next)).build();
+    }
 
+    @CacheResult(cacheName = "get-videos-by-title")
+    public Response getVideosByTitle(String title) {
         List<Video> videoList = videoRepository.findByTitle(title);
-        List<VideoDTO> videoDtoList = dtoMapper.map(videoList);
-        return Response.ok(videoDtoList).build();
+        return Response.ok(dtoMapper.map(videoList)).build();
     }
 
     @CacheResult(cacheName = "free-videos")
     public Response getFreeVideos(Long cursor) {
         List<Video> videoList = videoRepository.findFreeVideos(cursor, PAGE_SIZE_LIMIT);
 
-        String next = getNextIdForPaging(videoList);
+        Long next = getNextIdForPaging(videoList);
 
         List<VideoDTO> videoDtoList = dtoMapper.map(videoList);
         return Response.ok(new Cursor<>(videoDtoList, next)).build();
     }
 
-    static String getNextIdForPaging(List<Video> videoList) {
-        String next = null;
+    static Long getNextIdForPaging(List<Video> videoList) {
+        Long next = null;
         if (videoList.size() == PAGE_SIZE_LIMIT) {
             Video video = videoList.get(videoList.size() - 1);
             videoList.remove(video);
-            next = String.valueOf(video.getId());
+            next = video.getId();
         }
         return next;
     }
@@ -124,6 +124,7 @@ public class VideoService {
     public Response deleteVideo(Long id) {
         boolean deleted = videoRepository.deleteById(id);
         if (!deleted) {
+            Log.infov("Video id {0} not found.", id);
             return Response.status(Response.Status.NOT_FOUND).build();
         }
 
@@ -133,6 +134,7 @@ public class VideoService {
     }
 
     @CacheInvalidateAll(cacheName = "get-videos")
+    @CacheInvalidateAll(cacheName = "get-videos-by-title")
     @CacheInvalidateAll(cacheName = "free-videos")
     @CacheInvalidateAll(cacheName = "videos-id")
     @CacheInvalidateAll(cacheName = "get-categories")

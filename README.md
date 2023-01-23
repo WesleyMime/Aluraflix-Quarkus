@@ -41,4 +41,4 @@ If everything is working, the links to access are:
 
 ## Documentation
 
-The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8ZDSc5f2).
+The documentation made in Postman can be accessed by this [link](https://documenter.getpostman.com/view/19203694/2s8ZDa2MUK).

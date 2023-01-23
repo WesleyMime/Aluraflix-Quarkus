@@ -40,4 +40,4 @@ Se tudo estiver funcionando, os links para acessar são:
 
 ## Documentação
 
-A documentação feita no Postman pode ser acessada por esse [link](https://documenter.getpostman.com/view/19203694/2s8ZDSc5f2).
+A documentação feita no Postman pode ser acessada por esse [link](https://documenter.getpostman.com/view/19203694/2s8ZDa2MUK).

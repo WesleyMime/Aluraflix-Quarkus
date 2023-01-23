@@ -4,6 +4,7 @@ import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
 import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.model.video.VideoForm;
+import net.aluraflix.service.Cursor;
 import net.aluraflix.service.VideoService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
@@ -42,7 +43,7 @@ public class VideoResource {
             description = "Operation Completed",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = VideoDTO[].class))
+                    schema = @Schema(implementation = Cursor.class))
     )
     public Response getVideos(
             @Parameter(
@@ -53,12 +54,13 @@ public class VideoResource {
                     description = "Video id for cursor pagination"
             )
             @QueryParam("cursor") Long cursor) {
-        if (cursor == null) cursor = 0L;
         if (title == null) {
-            title = "";
+            if (cursor == null) cursor = 0L;
             Log.info("Getting all videos.");
-        } else Log.infov("Getting video by title {0}.", title);
-        return videoService.getVideos(title, cursor);
+            return videoService.getVideos(cursor);
+        }
+        Log.infov("Getting video by title {0}.", title);
+        return videoService.getVideosByTitle(title);
     }
 
     @GET
@@ -73,7 +75,7 @@ public class VideoResource {
             description = "Operation Completed",
             content = @Content(
                     mediaType = MediaType.APPLICATION_JSON,
-                    schema = @Schema(implementation = VideoDTO[].class))
+                    schema = @Schema(implementation = Cursor.class))
     )
     @PermitAll
     public Response getFreeVideos(
