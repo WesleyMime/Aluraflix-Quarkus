@@ -11,8 +11,8 @@ public class CategoryMapper implements Mapper<CategoryForm, Category> {
     @Override
     public Category map(CategoryForm source) {
         Category category = new Category();
-        category.setTitle(source.getTitulo());
-        category.setColor(source.getCor());
+        category.setTitle(source.titulo());
+        category.setColor(source.cor());
         return category;
     }
 
@@ -22,8 +22,8 @@ public class CategoryMapper implements Mapper<CategoryForm, Category> {
     }
 
     public Category map(Category category, CategoryForm form) {
-        category.setTitle(form.getTitulo());
-        category.setColor(form.getCor());
+        category.setTitle(form.titulo());
+        category.setColor(form.cor());
         return category;
     }
 }

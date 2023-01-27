@@ -10,9 +10,9 @@ public class VideoMapper implements Mapper<VideoForm, Video> {
     @Override
     public Video map(VideoForm source) {
         Video video = new Video();
-        video.setTitle(source.getTitulo());
-        video.setDescription(source.getDescricao());
-        video.setUrl(source.getUrl());
+        video.setTitle(source.titulo());
+        video.setDescription(source.descricao());
+        video.setUrl(source.url());
         return video;
     }
 
@@ -22,9 +22,9 @@ public class VideoMapper implements Mapper<VideoForm, Video> {
     }
 
     public Video map(Video video, VideoForm form) {
-        video.setTitle(form.getTitulo());
-        video.setDescription(form.getDescricao());
-        video.setUrl(form.getUrl());
+        video.setTitle(form.titulo());
+        video.setDescription(form.descricao());
+        video.setUrl(form.url());
         return video;
     }
 }

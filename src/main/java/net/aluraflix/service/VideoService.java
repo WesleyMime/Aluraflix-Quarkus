@@ -80,10 +80,10 @@ public class VideoService {
     public VideoDTO postVideo(VideoForm videoForm) {
         Video video = videoMapper.map(videoForm);
 
-        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
+        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.categoriaId());
 
         if (categoryOptional.isEmpty()) {
-            throw new VideoWithInvalidCategoryException(videoForm.getCategoriaId());
+            throw new VideoWithInvalidCategoryException(videoForm.categoriaId());
         }
         video.setCategory(categoryOptional.get());
         videoRepository.persist(video);
@@ -96,10 +96,10 @@ public class VideoService {
 
     @Transactional
     public VideoDTO updateVideo(Long id, VideoForm videoForm) {
-        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
+        Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.categoriaId());
 
         if (categoryOptional.isEmpty()) {
-            throw new VideoWithInvalidCategoryException(videoForm.getCategoriaId());
+            throw new VideoWithInvalidCategoryException(videoForm.categoriaId());
         }
         Optional<Video> videoOptional = videoRepository.findByIdOptional(id);
         if (videoOptional.isEmpty()) {

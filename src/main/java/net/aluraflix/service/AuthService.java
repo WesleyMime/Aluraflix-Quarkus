@@ -14,12 +14,12 @@ import java.util.Optional;
 public class AuthService {
 
     public JwtUtil.JwtDTO login(ClientForm clientForm) {
-        Optional<Client> clientOptional = Client.find("username", clientForm.username).firstResultOptional();
+        Optional<Client> clientOptional = Client.find("username", clientForm.username()).firstResultOptional();
         if (clientOptional.isEmpty()) {
             throw new InvalidCredentialsException("Invalid username");
         }
         Client client = clientOptional.get();
-        if (!BCrypt.checkpw(clientForm.password, client.getPassword())) {
+        if (!BCrypt.checkpw(clientForm.password(), client.getPassword())) {
             throw new InvalidCredentialsException("Invalid password");
         }
         Log.info("Successful login.");
@@ -28,10 +28,10 @@ public class AuthService {
     }
 
     public boolean signIn(ClientForm clientForm) {
-        if (Client.find("username", clientForm.username).firstResultOptional().isPresent()) {
+        if (Client.find("username", clientForm.username()).firstResultOptional().isPresent()) {
             throw new EmailAlreadyRegisteredException();
         }
-        Client.add(clientForm.username, clientForm.password, "user");
+        Client.add(clientForm.username(), clientForm.password(), "user");
         Log.info("Successful registration.");
         return true;
     }

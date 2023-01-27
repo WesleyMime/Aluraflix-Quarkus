@@ -6,17 +6,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 @Schema(name = "Client", description = "Client representation")
-public class ClientForm {
-
-    @Email
-    @Schema(example = "username@email.com", required = true)
-    public String username;
-    @NotBlank
-    @Schema(example = "password", required = true)
-    public String password;
-
-    public ClientForm(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+public record ClientForm(@Schema(example = "username@email.com", required = true) @Email String username,
+                        @Schema(example = "password", required = true) @NotBlank String password) {
 }
