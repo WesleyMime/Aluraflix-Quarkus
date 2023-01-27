@@ -2,6 +2,7 @@ package net.aluraflix.controller;
 
 import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
+import net.aluraflix.exception.ErrorResponse;
 import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.model.video.VideoForm;
 import net.aluraflix.service.Cursor;
@@ -21,6 +22,8 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
+import java.util.List;
 
 @Path("/videos")
 @Produces(MediaType.APPLICATION_JSON)
@@ -57,10 +60,12 @@ public class VideoResource {
         if (title == null) {
             if (cursor == null) cursor = 0L;
             Log.info("Getting all videos.");
-            return videoService.getVideos(cursor);
+            Cursor<VideoDTO> videos = videoService.getVideos(cursor);
+            return Response.ok(videos).build();
         }
         Log.infov("Getting video by title {0}.", title);
-        return videoService.getVideosByTitle(title);
+        List<VideoDTO> videosByTitle = videoService.getVideosByTitle(title);
+        return Response.ok(videosByTitle).build();
     }
 
     @GET
@@ -85,7 +90,8 @@ public class VideoResource {
             @QueryParam("cursor") Long cursor) {
         if (cursor == null) cursor = 0L;
         Log.info("Getting videos without authentication.");
-        return videoService.getFreeVideos(cursor);
+        Cursor<VideoDTO> freeVideos = videoService.getFreeVideos(cursor);
+        return Response.ok(freeVideos).build();
     }
 
     @GET
@@ -104,7 +110,10 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "404",
-            description = "Video Not Found"
+            description = "Video Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response getVideoById(
             @Parameter(
@@ -113,7 +122,8 @@ public class VideoResource {
             )
             @PathParam("id") Long id) {
         Log.infov("Getting video id {0}.", id);
-        return videoService.getVideoById(id);
+        VideoDTO video = videoService.getVideoById(id);
+        return Response.ok(video).build();
     }
 
     @POST
@@ -132,11 +142,17 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "400",
-            description = "Video Not Valid"
+            description = "Video Not Valid",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     @APIResponse(
             responseCode = "422",
-            description = "Invalid Category Id"
+            description = "Invalid Category Id",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response postVideo(
             @RequestBody(
@@ -145,7 +161,8 @@ public class VideoResource {
                     content = @Content(schema = @Schema(implementation = VideoForm.class))
             )
             @Valid VideoForm videoForm) {
-        return videoService.postVideo(videoForm);
+        VideoDTO video = videoService.postVideo(videoForm);
+        return Response.created(URI.create("/videos/" + video.id())).entity(video).build();
     }
 
     @PUT
@@ -165,15 +182,24 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "404",
-            description = "Video Not Found"
+            description = "Video Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     @APIResponse(
             responseCode = "400",
-            description = "Video Not Valid"
+            description = "Video Not Valid",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     @APIResponse(
             responseCode = "422",
-            description = "Invalid Category Id"
+            description = "Invalid Category Id",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response updateVideo(
             @Parameter(
@@ -187,7 +213,8 @@ public class VideoResource {
                     content = @Content(schema = @Schema(implementation = VideoForm.class))
             )
             @Valid VideoForm videoForm) {
-        return videoService.updateVideo(id, videoForm);
+        VideoDTO videoDTO = videoService.updateVideo(id, videoForm);
+        return Response.ok(videoDTO).build();
     }
 
     @DELETE
@@ -204,7 +231,10 @@ public class VideoResource {
     )
     @APIResponse(
             responseCode = "404",
-            description = "Video Not Found"
+            description = "Video Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response deleteVideo(
             @Parameter(
@@ -212,6 +242,8 @@ public class VideoResource {
                     required = true
             )
             @PathParam("id") Long id) {
-        return videoService.deleteVideo(id);
+        boolean deleted = videoService.deleteVideo(id);
+        if (!deleted) throw new RuntimeException();
+        return Response.noContent().build();
     }
 }

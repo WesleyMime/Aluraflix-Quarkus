@@ -2,8 +2,10 @@ package net.aluraflix.controller;
 
 import io.quarkus.logging.Log;
 import io.quarkus.security.Authenticated;
+import net.aluraflix.exception.ErrorResponse;
 import net.aluraflix.model.category.CategoryDTO;
 import net.aluraflix.model.category.CategoryForm;
+import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.service.CategoryService;
 import net.aluraflix.service.Cursor;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -20,6 +22,7 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.net.URI;
 
 @Path("/categorias")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -51,7 +54,8 @@ public class CategoryResource {
             @QueryParam("cursor") Long cursor) {
         Log.info("Get all categories.");
         if (cursor == null) cursor = 0L;
-        return categoryService.getAllCategories(cursor);
+        Cursor<CategoryDTO> categories = categoryService.getAllCategories(cursor);
+        return Response.ok(categories).build();
     }
 
     @GET
@@ -70,7 +74,10 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category Not Found"
+            description = "Category Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response getCategoryById(
             @Parameter(
@@ -79,7 +86,8 @@ public class CategoryResource {
             )
             @PathParam("id") Long id) {
         Log.infov("Getting category by id {0}.", id);
-        return categoryService.getCategoryById(id);
+        CategoryDTO categoryById = categoryService.getCategoryById(id);
+        return Response.ok(categoryById).build();
     }
 
     @GET
@@ -98,7 +106,10 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category Not Found"
+            description = "Category Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response getVideosByCategory(
             @Parameter(
@@ -112,7 +123,8 @@ public class CategoryResource {
             @QueryParam("cursor") Long cursor) {
         Log.infov("Getting videos by category id {0}.", id);
         if (cursor == null) cursor = 0L;
-        return categoryService.getVideosByCategory(id, cursor);
+        Cursor<VideoDTO> videosByCategory = categoryService.getVideosByCategory(id, cursor);
+        return Response.ok(videosByCategory).build();
     }
 
     @POST
@@ -131,7 +143,10 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "400",
-            description = "Category Not Valid"
+            description = "Category Not Valid",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response postCategories(
             @RequestBody(
@@ -140,7 +155,8 @@ public class CategoryResource {
                     content = @Content(schema = @Schema(implementation = CategoryForm.class))
             )
             @Valid CategoryForm categoryForm) {
-        return categoryService.postCategories(categoryForm);
+        CategoryDTO categoryDTO = categoryService.postCategories(categoryForm);
+        return Response.created(URI.create("/categorias/" + categoryDTO.id())).entity(categoryDTO).build();
     }
 
     @PUT
@@ -160,11 +176,17 @@ public class CategoryResource {
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category Not Found"
+            description = "Category Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     @APIResponse(
             responseCode = "400",
-            description = "Category Not Valid"
+            description = "Category Not Valid",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response updateCategory(
             @Parameter(
@@ -178,7 +200,8 @@ public class CategoryResource {
                     content = @Content(schema = @Schema(implementation = CategoryForm.class))
             )
             @Valid CategoryForm categoryForm) {
-        return categoryService.updateCategory(id, categoryForm);
+        CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryForm);
+        return Response.ok(updatedCategory).build();
     }
 
     @DELETE
@@ -190,12 +213,15 @@ public class CategoryResource {
             description = "Delete a category in the database"
     )
     @APIResponse(
-            responseCode = "200",
+            responseCode = "204",
             description = "Category Deleted"
     )
     @APIResponse(
             responseCode = "404",
-            description = "Category Not Found"
+            description = "Category Not Found",
+            content = @Content(
+                    mediaType = MediaType.APPLICATION_JSON,
+                    schema = @Schema(implementation = ErrorResponse.class))
     )
     public Response deleteCategory(
             @Parameter(
@@ -203,7 +229,9 @@ public class CategoryResource {
                     required = true
             )
             @PathParam("id") Long id) {
-        return categoryService.deleteCategory(id);
+        boolean deleted = categoryService.deleteCategory(id);
+        if (!deleted) throw new RuntimeException();
+        return Response.noContent().build();
     }
 
     private static final String EXAMPLE = """

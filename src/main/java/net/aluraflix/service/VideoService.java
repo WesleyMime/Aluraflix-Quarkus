@@ -3,6 +3,8 @@ package net.aluraflix.service;
 import io.quarkus.cache.CacheInvalidateAll;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.logging.Log;
+import net.aluraflix.exception.EntityNotFoundException;
+import net.aluraflix.exception.VideoWithInvalidCategoryException;
 import net.aluraflix.model.category.Category;
 import net.aluraflix.model.category.CategoryRepository;
 import net.aluraflix.model.video.*;
@@ -10,8 +12,6 @@ import net.aluraflix.model.video.*;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,28 +33,27 @@ public class VideoService {
     private static final Integer PAGE_SIZE_LIMIT = 6;
 
     @CacheResult(cacheName = "get-videos")
-    public Response getVideos(Long cursor) {
+    public Cursor<VideoDTO> getVideos(Long cursor) {
         List<Video> videoList = videoRepository.findWithPaging(cursor, PAGE_SIZE_LIMIT);
-        Long next = getNextIdForPaging(videoList);
 
+        Long next = getNextIdForPaging(videoList);
         List<VideoDTO> videoDTOList = dtoMapper.map(videoList);
-        return Response.ok(new Cursor<>(videoDTOList, next)).build();
+        return new Cursor<>(videoDTOList, next);
     }
 
     @CacheResult(cacheName = "get-videos-by-title")
-    public Response getVideosByTitle(String title) {
+    public List<VideoDTO> getVideosByTitle(String title) {
         List<Video> videoList = videoRepository.findByTitle(title);
-        return Response.ok(dtoMapper.map(videoList)).build();
+        return dtoMapper.map(videoList);
     }
 
     @CacheResult(cacheName = "free-videos")
-    public Response getFreeVideos(Long cursor) {
+    public Cursor<VideoDTO> getFreeVideos(Long cursor) {
         List<Video> videoList = videoRepository.findFreeVideos(cursor, PAGE_SIZE_LIMIT);
 
         Long next = getNextIdForPaging(videoList);
-
         List<VideoDTO> videoDtoList = dtoMapper.map(videoList);
-        return Response.ok(new Cursor<>(videoDtoList, next)).build();
+        return new Cursor<>(videoDtoList, next);
     }
 
     static Long getNextIdForPaging(List<Video> videoList) {
@@ -68,69 +67,60 @@ public class VideoService {
     }
 
     @CacheResult(cacheName = "videos-id")
-    public Response getVideoById(Long id) {
+    public VideoDTO getVideoById(Long id) {
         Optional<Video> optionalVideo = videoRepository.findByIdOptional(id);
 
         if (optionalVideo.isEmpty()) {
-            Log.infov("Video id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Video.class, id);
         }
-        VideoDTO videoDTO = dtoMapper.map(optionalVideo.get());
-        return Response.ok(videoDTO).build();
+        return dtoMapper.map(optionalVideo.get());
     }
 
     @Transactional
-    public Response postVideo(VideoForm videoForm) {
+    public VideoDTO postVideo(VideoForm videoForm) {
         Video video = videoMapper.map(videoForm);
 
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
 
         if (categoryOptional.isEmpty()) {
-            Log.infov("Video with invalid category id: {0}.",videoForm.getCategoriaId());
-            return Response.status(422).build();
+            throw new VideoWithInvalidCategoryException(videoForm.getCategoriaId());
         }
         video.setCategory(categoryOptional.get());
-
         videoRepository.persist(video);
 
         invalidateCache();
-        VideoDTO dto = dtoMapper.map(video);
-        Log.infov("Successfully posted video id {0}.", dto.id());
-        return Response.created(URI.create("/videos/" + dto.id())).entity(dto).build();
+        VideoDTO videoDTO = dtoMapper.map(video);
+        Log.infov("Successfully posted video id {0}.", videoDTO.id());
+        return videoDTO;
     }
 
     @Transactional
-    public Response updateVideo(Long id, VideoForm videoForm) {
+    public VideoDTO updateVideo(Long id, VideoForm videoForm) {
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(videoForm.getCategoriaId());
 
         if (categoryOptional.isEmpty()) {
-            Log.infov("Video with invalid category id: {0}.",videoForm.getCategoriaId());
-            return Response.status(422).build();
+            throw new VideoWithInvalidCategoryException(videoForm.getCategoriaId());
         }
         Optional<Video> videoOptional = videoRepository.findByIdOptional(id);
         if (videoOptional.isEmpty()) {
-            Log.infov("Video id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Video.class, id);
         }
-
         Video video = videoMapper.map(videoOptional.get(), videoForm);
         video.setCategory(categoryOptional.get());
 
         invalidateCache();
         Log.infov("Video id {0} updated.", id);
-        return Response.ok(dtoMapper.map(video)).build();
+        return dtoMapper.map(video);
     }
 
-    public Response deleteVideo(Long id) {
+    public boolean deleteVideo(Long id) {
         boolean deleted = videoRepository.deleteById(id);
         if (!deleted) {
-            Log.infov("Video id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Video.class, id);
         }
-
         invalidateCache();
         Log.infov("Video id {0} deleted.", id);
-        return Response.ok().build();
+        return true;
     }
 
     @CacheInvalidateAll(cacheName = "get-videos")

@@ -13,4 +13,6 @@ public abstract class JwtUtil {
                 .expiresAt(Instant.now().plusSeconds(1800))
                 .sign();
     }
+
+    public record JwtDTO(String type, String token) {}
 }

@@ -1,37 +1,38 @@
 package net.aluraflix.service;
 
 import io.quarkus.logging.Log;
+import net.aluraflix.exception.EmailAlreadyRegisteredException;
+import net.aluraflix.exception.InvalidCredentialsException;
 import net.aluraflix.model.client.Client;
 import net.aluraflix.model.client.ClientForm;
 import org.apache.sshd.common.config.keys.loader.openssh.kdf.BCrypt;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.core.Response;
 import java.util.Optional;
 
 @ApplicationScoped
 public class AuthService {
 
-    public Response login(ClientForm clientForm) {
+    public JwtUtil.JwtDTO login(ClientForm clientForm) {
         Optional<Client> clientOptional = Client.find("username", clientForm.username).firstResultOptional();
         if (clientOptional.isEmpty()) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            throw new InvalidCredentialsException("Invalid username");
         }
         Client client = clientOptional.get();
         if (!BCrypt.checkpw(clientForm.password, client.getPassword())) {
-            Log.warn("Invalid password.");
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            throw new InvalidCredentialsException("Invalid password");
         }
         Log.info("Successful login.");
-        return Response.ok(JwtUtil.generateJwt(client.getUsername(), client.getRoles())).build();
+        String jwt = JwtUtil.generateJwt(client.getUsername(), client.getRoles());
+        return new JwtUtil.JwtDTO("Bearer", jwt);
     }
 
-    public Response signIn(ClientForm clientForm) {
+    public boolean signIn(ClientForm clientForm) {
         if (Client.find("username", clientForm.username).firstResultOptional().isPresent()) {
-            return Response.status(Response.Status.CONFLICT).build();
+            throw new EmailAlreadyRegisteredException();
         }
         Client.add(clientForm.username, clientForm.password, "user");
         Log.info("Successful registration.");
-        return Response.status(Response.Status.CREATED).build();
+        return true;
     }
 }

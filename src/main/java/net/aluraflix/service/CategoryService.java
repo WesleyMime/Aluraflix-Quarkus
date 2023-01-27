@@ -3,6 +3,7 @@ package net.aluraflix.service;
 import io.quarkus.cache.CacheInvalidateAll;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.logging.Log;
+import net.aluraflix.exception.EntityNotFoundException;
 import net.aluraflix.model.category.*;
 import net.aluraflix.model.video.Video;
 import net.aluraflix.model.video.VideoDTO;
@@ -12,8 +13,6 @@ import net.aluraflix.model.video.VideoRepository;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,14 +37,13 @@ public class CategoryService {
     private static final Integer PAGE_SIZE_LIMIT = 6;
 
     @CacheResult(cacheName = "get-categories")
-    public Response getAllCategories(Long cursor) {
+    public Cursor<CategoryDTO> getAllCategories(Long cursor) {
         List<Category> categoryList = categoryRepository.findWithPaging(cursor, PAGE_SIZE_LIMIT);
         showOnlyFiveVideosPerCategory(categoryList);
 
         Long next = getNextIdForPaging(categoryList);
-
         List<CategoryDTO> categoryDtoList = dtoMapper.map(categoryList);
-        return Response.ok(new Cursor<>(categoryDtoList, next)).build();
+        return new Cursor<>(categoryDtoList, next);
     }
 
     private void showOnlyFiveVideosPerCategory(List<Category> categoryList) {
@@ -69,73 +67,64 @@ public class CategoryService {
     }
 
     @CacheResult(cacheName = "category-id")
-    public Response getCategoryById(Long id) {
+    public CategoryDTO getCategoryById(Long id) {
         Optional<Category> optionalCategory = categoryRepository.findByIdOptional(id);
 
         if (optionalCategory.isEmpty()) {
-            Log.infov("Category id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Category.class, id);
         }
-        CategoryDTO categoryDTO = dtoMapper.map(optionalCategory.get());
-        return Response.ok(categoryDTO).build();
+        return dtoMapper.map(optionalCategory.get());
     }
 
     @CacheResult(cacheName = "videos-by-category")
-    public Response getVideosByCategory(Long id, Long cursor) {
+    public Cursor<VideoDTO> getVideosByCategory(Long id, Long cursor) {
 
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(id);
         if (categoryOptional.isEmpty()) {
-            Log.infov("Category id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Category.class, id);
         }
 
         List<Video> videoList = videoRepository.findVideosByCategoryId(id, cursor, PAGE_SIZE_LIMIT);
 
         Long next = VideoService.getNextIdForPaging(videoList);
-
         List<VideoDTO> videoDtoList = videoDTOMapper.map(videoList);
-        return Response.ok(new Cursor<>(videoDtoList, next)).build();
+        return new Cursor<>(videoDtoList, next);
     }
 
     @Transactional
-    public Response postCategories(CategoryForm categoryForm) {
+    public CategoryDTO postCategories(CategoryForm categoryForm) {
         Category category = categoryMapper.map(categoryForm);
-
         categoryRepository.persist(category);
 
         invalidateCache();
         CategoryDTO categoryDTO = dtoMapper.map(category);
         Long categoryId = categoryDTO.id();
         Log.infov("Successfully posted category id {0}.", categoryId);
-        return Response.created(URI.create("/categorias/" + categoryId)).entity(categoryDTO).build();
+        return categoryDTO;
     }
 
     @Transactional
-    public Response updateCategory(Long id, CategoryForm categoryForm) {
+    public CategoryDTO updateCategory(Long id, CategoryForm categoryForm) {
         Optional<Category> categoryOptional = categoryRepository.findByIdOptional(id);
 
         if (categoryOptional.isEmpty()) {
-            Log.infov("Category id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Category.class, id);
         }
 
         Category category = categoryMapper.map(categoryOptional.get(), categoryForm);
-
         invalidateCache();
         Log.infov("Category id {0} updated.", id);
-        return  Response.ok(dtoMapper.map(category)).build();
+        return dtoMapper.map(category);
     }
 
-    public Response deleteCategory(Long id) {
+    public boolean deleteCategory(Long id) {
         boolean deleted = categoryRepository.deleteById(id);
         if (!deleted) {
-            Log.infov("Category id {0} not found.", id);
-            return Response.status(Response.Status.NOT_FOUND).build();
+            throw new EntityNotFoundException(Category.class, id);
         }
-
         invalidateCache();
         Log.infov("Category id {0} deleted.", id);
-        return Response.ok().build();
+        return true;
     }
 
     @CacheInvalidateAll(cacheName = "get-categories")

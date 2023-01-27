@@ -116,6 +116,6 @@ class CategoryResourceTest {
                 .when()
                 .delete(CATEGORY_ENDPOINT + "/1")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 }
