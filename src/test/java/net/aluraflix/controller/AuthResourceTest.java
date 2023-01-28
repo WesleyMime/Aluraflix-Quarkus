@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -31,22 +33,36 @@ class AuthResourceTest {
                 .when()
                 .post(LOGIN_ENDPOINT)
                 .then()
-                .contentType(MediaType.TEXT_PLAIN)
-                .statusCode(Response.Status.OK.getStatusCode());
+                .contentType(MediaType.APPLICATION_JSON)
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("type", containsString("Bearer"))
+                .body("token", containsString("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"));
     }
 
     @Test
     @Order(2)
     void testLoginEndpointKO() {
-        ClientForm video = new ClientForm("johndoe@email.com", "invalid");
+        ClientForm loginForm = new ClientForm("johndoe@email.com", "invalid");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(video)
+                .body(loginForm)
                 .when()
                 .post(LOGIN_ENDPOINT)
                 .then()
-                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode());
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode())
+                .body("errors.message", hasItem("Invalid password"));
+
+        ClientForm loginForm2 = new ClientForm("invalid@email.com", "invalid");
+
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(loginForm2)
+                .when()
+                .post(LOGIN_ENDPOINT)
+                .then()
+                .statusCode(Response.Status.UNAUTHORIZED.getStatusCode())
+                .body("errors.message", hasItem("Invalid username"));
     }
 
     @Test
@@ -74,7 +90,8 @@ class AuthResourceTest {
                 .when()
                 .post(SIGNIN_ENDPOINT)
                 .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body("errors.field", hasItem("username"));
     }
 
     @Test
@@ -88,6 +105,7 @@ class AuthResourceTest {
                 .when()
                 .post(SIGNIN_ENDPOINT)
                 .then()
-                .statusCode(Response.Status.CONFLICT.getStatusCode());
+                .statusCode(Response.Status.CONFLICT.getStatusCode())
+                .body("errors.message", hasItem("Email already registered."));
     }
 }

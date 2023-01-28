@@ -12,7 +12,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.containsString;
 
 @QuarkusTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -27,45 +29,59 @@ class CategoryResourceTest {
         given()
                 .get(CATEGORY_ENDPOINT)
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("items.id", hasItem(2))
+                .body("items.titulo", hasItem("Aluraflix"))
+                .body("items.cor", hasItem("#2a7ae4"))
+                .body("next", is(6));
     }
 
     @Test
     @Order(2)
-    public void testCategoryByIdEndpointOK() {
+    public void testCategoryByIdEndpoint() {
         given()
                 .when()
-                .get(CATEGORY_ENDPOINT + "/1")
+                .get(CATEGORY_ENDPOINT + "/7")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
+                .body("id", is(7))
                 .body("titulo", containsString("LIVRE"))
-                .body("cor", containsString("FFFFFF"));
-    }
+                .body("cor", containsString("#FFFFFF"));
 
-    @Test
-    @Order(2)
-    public void testCategoryByIdEndpointKO() {
         given()
                 .when()
                 .get(CATEGORY_ENDPOINT + "/999")
                 .then()
-                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode())
+                .body("errors.message", hasItem("Category id 999 not found."));
     }
 
     @Test
     @Order(2)
-    public void testVideosByCategoryEndpointOK() {
+    public void testVideosByCategoryEndpoint() {
         given()
                 .when()
                 .get(CATEGORY_ENDPOINT + "/1/videos")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode())
+                .body("items.id", hasItem(1))
+                .body("items.titulo", hasItem("Aluraflix3"))
+                .body("items.descricao", hasItem("Description3"))
+                .body("items.url", hasItem("Url3"))
+                .body("items.categoriaId", hasItem(1));
+
+        given()
+                .when()
+                .get(CATEGORY_ENDPOINT + "/999/videos")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode())
+                .body("errors.message", hasItem("Category id 999 not found."));
     }
 
     @Test
     @Order(1)
     public void testPostCategoryEndpointOK() {
-        CategoryForm category = new CategoryForm("LIVRE", "FFFFFF");
+        CategoryForm category = new CategoryForm("LIVRE", "#FFFFFF");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -74,48 +90,70 @@ class CategoryResourceTest {
                 .post(CATEGORY_ENDPOINT)
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode())
-                .header("Location", containsString("/categorias/1"))
+                .header("Location", containsString("/categorias/7"))
+                .body("id", is(7))
                 .body("titulo", containsString("LIVRE"))
-                .body("cor", containsString("FFFFFF"));
-    }
+                .body("cor", containsString("#FFFFFF"));
 
-    @Test
-    @Order(1)
-    public void testPostCategoryEndpointKO() {
-        CategoryForm category = new CategoryForm("LIVRE", "");
+        CategoryForm category2 = new CategoryForm("LIVRE", "");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(category)
+                .body(category2)
                 .when()
                 .post(CATEGORY_ENDPOINT)
                 .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .body("errors.field", hasItem("cor"));
     }
 
     @Test
     @Order(3)
-    public void testUpdateCategoryEndpoint() {
+    public void testUpdateCategoryEndpointOK() {
         CategoryForm category = new CategoryForm("title", "color");
 
         given()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(category)
                 .when()
-                .put(CATEGORY_ENDPOINT + "/1")
+                .put(CATEGORY_ENDPOINT + "/7")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
+                .body("id", is(7))
                 .body("titulo", containsString("title"))
                 .body("cor", containsString("color"));
+
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(category)
+                .when()
+                .put(CATEGORY_ENDPOINT + "/999")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode())
+                .body("errors.message", hasItem("Category id 999 not found."));
     }
 
     @Test
     @Order(4)
-    public void testDeleteEndpoint() {
+    public void testDeleteEndpointOK() {
         given()
                 .when()
-                .delete(CATEGORY_ENDPOINT + "/1")
+                .delete(CATEGORY_ENDPOINT + "/7")
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+
+        given()
+                .contentType(MediaType.APPLICATION_JSON)
+                .when()
+                .get(CATEGORY_ENDPOINT + "/7")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+
+        given()
+                .when()
+                .delete(CATEGORY_ENDPOINT + "/999")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode())
+                .body("errors.message", hasItem("Category id 999 not found."));
     }
 }
