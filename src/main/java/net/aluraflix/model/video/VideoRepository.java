@@ -20,7 +20,7 @@ public class VideoRepository implements PanacheRepository<Video> {
     }
 
     public List<Video> findFreeVideos(Long cursor, Integer pageSizeLimit) {
-        return find("from Video v where category.title = 'Aluraflix' and id >= ?1", cursor)
+        return find("from Video v where category.title = 'LIVRE' and id >= ?1", cursor)
                 .page(Page.ofSize(pageSizeLimit))
                 .list();
     }

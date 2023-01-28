@@ -10,4 +10,11 @@ import javax.validation.constraints.NotNull;
 public record VideoForm(@Schema(example = "Title", required = true) @NotBlank String titulo,
                         @Schema(example = "Description", required = false) String descricao,
                         @NotBlank @URL @Schema(example = "https://www.foo.com", required = true) String url,
-                        @NotNull @Schema(example = "1", required = true) Long categoriaId) {}
+                        @NotNull @Schema(example = "1", required = false) Long categoriaId) {
+    public VideoForm(String titulo, String descricao, String url, Long categoriaId)  {
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.url = url;
+        this.categoriaId = (categoriaId == null) ? 1L : categoriaId;
+    }
+}
