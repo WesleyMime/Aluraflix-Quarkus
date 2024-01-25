@@ -26,14 +26,12 @@ The programming language, frameworks and technologies were of free choice. I cho
 ## Deploy
 
 
-The application can be accessed through this link https://aluraflix-wmime.net/
-
 To run locally you need to have Docker installed.
 
 - Open the terminal and clone the project using the command
-  "git clone https://github.com/WesleyMime/Aluraflix-Quarkus.git"
+ `git clone https://github.com/WesleyMime/Aluraflix-Quarkus.git`.
 
-- Enter the "Aluraflix-Quarkus" folder and use the command "docker-compose up".
+- Enter the `Aluraflix-Quarkus` folder and use the command `docker-compose up`.
 
 If everything is working, the links to access are:
 - Front-end: http://localhost:8080
