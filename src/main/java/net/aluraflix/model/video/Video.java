@@ -2,7 +2,7 @@ package net.aluraflix.model.video;
 
 import net.aluraflix.model.category.Category;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 public class Video {

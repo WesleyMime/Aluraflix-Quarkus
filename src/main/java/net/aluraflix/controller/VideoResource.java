@@ -15,13 +15,13 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
-import javax.annotation.security.PermitAll;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import jakarta.annotation.security.PermitAll;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 

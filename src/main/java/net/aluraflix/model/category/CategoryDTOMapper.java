@@ -4,8 +4,8 @@ import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.model.video.VideoDTOMapper;
 import net.aluraflix.service.Mapper;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped

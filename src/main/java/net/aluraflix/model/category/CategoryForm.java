@@ -2,7 +2,7 @@ package net.aluraflix.model.category;
 
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 @Schema(name = "Category", description = "Category representation")
 public record CategoryForm(@Schema(example = "Title", required = true) @NotBlank String titulo,

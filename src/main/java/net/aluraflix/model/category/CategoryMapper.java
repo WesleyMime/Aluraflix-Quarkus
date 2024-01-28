@@ -1,8 +1,8 @@
 package net.aluraflix.model.category;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import net.aluraflix.service.Mapper;
 
-import javax.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped

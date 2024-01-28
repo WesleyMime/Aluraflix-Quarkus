@@ -10,9 +10,9 @@ import net.aluraflix.model.video.VideoDTO;
 import net.aluraflix.model.video.VideoDTOMapper;
 import net.aluraflix.model.video.VideoRepository;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 

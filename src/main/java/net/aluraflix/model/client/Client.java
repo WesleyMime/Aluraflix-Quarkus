@@ -8,7 +8,7 @@ import io.quarkus.security.jpa.UserDefinition;
 import io.quarkus.security.jpa.Username;
 import org.hibernate.validator.constraints.Length;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 @Entity
 @UserDefinition

@@ -2,7 +2,7 @@ package net.aluraflix.model.video;
 
 import net.aluraflix.service.Mapper;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 
 @ApplicationScoped

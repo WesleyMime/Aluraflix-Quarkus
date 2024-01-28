@@ -2,7 +2,7 @@ package net.aluraflix.model.category;
 
 import net.aluraflix.model.video.Video;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
