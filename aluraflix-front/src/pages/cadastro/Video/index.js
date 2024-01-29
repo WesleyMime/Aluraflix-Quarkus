@@ -6,8 +6,10 @@ import FormField from '../../../components/FormField';
 import Button from '../../../components/Button';
 import videosRepository from '../../../repositories/videos';
 import categoriasRepository from '../../../repositories/categorias';
+import { useAuth } from '../../../AuthContext';
 
 function CadastroVideo() {
+  const { token } = useAuth();
   const history = useHistory();
   const [categorias, setCategorias] = useState([]);
   const categoryTitles = categorias.map(({ titulo }) => titulo);
@@ -19,11 +21,11 @@ function CadastroVideo() {
 
   useEffect(() => {
     categoriasRepository
-      .getAll()
+      .getAll(token)
       .then((categoriasFromServer) => {
         setCategorias(categoriasFromServer);
       });
-  }, []);
+  }, [token]);
 
   return (
     <PageDefault>
@@ -41,7 +43,7 @@ function CadastroVideo() {
           titulo: values.titulo,
           url: values.url,
           categoriaId: categoriaEscolhida.id,
-        })
+        }, token)
           .then(() => {
             console.log('Cadastrou com sucesso!');
             history.push('/');

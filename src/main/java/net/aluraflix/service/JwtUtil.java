@@ -10,7 +10,7 @@ public abstract class JwtUtil {
         return Jwt.issuer("Aluraflix")
                 .subject(username)
                 .groups(roles)
-                .expiresAt(Long.MAX_VALUE) // .expiresAt(Instant.now().plusSeconds(1800))
+                .expiresAt(Instant.now().plusSeconds(1800)) // .expiresAt(Long.MAX_VALUE)
                 .sign();
     }
 

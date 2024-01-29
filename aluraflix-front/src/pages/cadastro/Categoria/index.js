@@ -1,11 +1,18 @@
+import config from '../../../config';
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
 import Button from '../../../components/Button';
 import useForm from '../../../hooks/useForm';
+import categoriasRepository from '../../../repositories/categorias';
+import { useAuth } from '../../../AuthContext';
+
+const URL_CATEGORIES = `${config.URL_BACKEND_TOP}/categorias`;
 
 function CadastroCategoria() {
+  const { token } = useAuth();
   const valoresIniciais = {
     nome: '',
     descricao: '',
@@ -17,16 +24,16 @@ function CadastroCategoria() {
   const [categorias, setCategorias] = useState([]);
 
   useEffect(() => {
-    const URL_TOP = window.location.hostname.includes('localhost')
-      ? 'http://localhost:8080/categorias'
-      : 'https://devsoutinhoflix.herokuapp.com/categorias';
-    // E a ju ama variáveis
-    fetch(URL_TOP)
+    fetch(URL_CATEGORIES, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      }})
       .then(async (respostaDoServidor) => {
-        const resposta = await respostaDoServidor.json();
-        setCategorias([
-          ...resposta,
-        ]);
+        const resposta = await respostaDoServidor.json()
+        
+        setCategorias([...resposta.items]);
+        return resposta.items;
       });
 
     // setTimeout(() => {
@@ -46,7 +53,7 @@ function CadastroCategoria() {
     //     },
     //   ]);
     // }, 4 * 1000);
-  }, []);
+  }, [token]);
 
   return (
     <PageDefault>
@@ -61,6 +68,14 @@ function CadastroCategoria() {
           ...categorias,
           values,
         ]);
+
+        categoriasRepository.create({
+          titulo: values.nome,
+          cor: values.cor
+        }, token)
+          .then(() => {
+            console.log('Cadastrou com sucesso!');
+          });
 
         clearForm();
       }}
@@ -89,7 +104,7 @@ function CadastroCategoria() {
           onChange={handleChange}
         />
 
-        <Button>
+        <Button type="submit">
           Cadastrar
         </Button>
       </form>
