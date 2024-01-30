@@ -1,6 +1,8 @@
 <h1 align="center"> Aluraflix </h1>
 
-![](https://user-images.githubusercontent.com/55067868/203868802-f2b30f31-420b-462f-9e95-e84653acc53b.png#vitrinedev)
+![demo-api](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/df82bf93-e363-4fc8-a633-80be31c5f6a5)
+
+![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65)
 
 [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.md)
 [![pt-br](https://img.shields.io/badge/lang-pt--br-g.svg)](https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.pt-br.md)
