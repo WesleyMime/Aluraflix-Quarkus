@@ -1,11 +1,17 @@
-<h1 align="center"> Aluraflix </h1>
+<div align="center">
+<h1> Aluraflix </h1>
+
+[![en][en-shield]][en-url]
+[![pt-br][pt-br-shield]][pt-br-url]
+[![project_license][license-shield]][license-url]
+[![last-commit][commit-shield]][commit-url]
+![workflow][workflow-shield]
+</div>
 
 ![demo-api](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/df82bf93-e363-4fc8-a633-80be31c5f6a5)
 
-![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65)
+![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65) 
 
-[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.md)
-[![pt-br](https://img.shields.io/badge/lang-pt--br-g.svg)](https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.pt-br.md)
 
 ## Sobre o desafio proposto no Challenge Backend
 
@@ -21,19 +27,43 @@ O projeto foi desenvolvido em sprints com duração 1 semana cada, que possuiam 
 
 ## Tecnologias
 
-A linguagem de programação, frameworks e tecnologias eram de livre escolha. Eu escolhi desenvolver o projeto com as seguintes tecnologias:
+![java]
+![quarkus]
+![postgresql]
+![docker]
+![kubernetes]
+![oracle-cloud]
+![cloudflare]
 
-<img alt="Java" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original-wordmark.svg" width="50" height="50" /> <img alt="Quarkus" src="https://design.jboss.org/quarkus/logo/final/SVG/quarkus_icon_rgb_default.svg" width="50" height="50" /> <img alt="Postgresql" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original-wordmark.svg" width="50" height="50" /> <img alt="Docker" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-plain-wordmark.svg" width="50" height="50" /> <img alt="Kubernetes" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/kubernetes/kubernetes-plain-wordmark.svg" width="50" height="50" />
 
 ## Deploy
 
 
-Para rodar localmente é necessário ter Docker instalado.
+A API Quarkus está em uma máquina virtual da Oracle Cloud Infrastructure, com DNS e HTTPS da Cloudflare.
 
-- Abra o terminal e clone o projeto usando o comando  `git clone https://github.com/WesleyMime/Aluraflix-Quarkus.git`
-.
+O link para acessar é:
+* API: https://aluraflix-api.marujo.site 
 
-- Entre na pasta "Aluraflix-Quarkus" e use o comando `docker-compose up`.
+
+## Rode Localmente
+
+
+Para rodar é necessário ter Docker instalado.
+
+- Clone o projeto
+```
+git clone https://github.com/WesleyMime/Aluraflix-Quarkus.git
+```
+
+- Entre na pasta do projeto
+```
+cd Aluraflix-Quarkus
+```
+
+- Inicie os serviços
+```
+docker compose up
+```
 
 Se tudo estiver funcionando, os links para acessar são:
 - Front-end: http://localhost:8080
@@ -42,3 +72,28 @@ Se tudo estiver funcionando, os links para acessar são:
 ## Documentação
 
 A documentação feita no Postman pode ser acessada por esse [link](https://documenter.getpostman.com/view/19203694/2s8ZDa2MUK).
+
+
+## Licença
+
+Distribuído sob a licença do MIT. Consulte `LICENSE.txt` para obter mais informações.
+
+
+[en-shield]: https://img.shields.io/badge/lang-en-green.svg?style=for-the-badge
+[en-url]: https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.md
+[pt-br-shield]: https://img.shields.io/badge/lang-pt--br-lightdarkgreen.svg?style=for-the-badge
+[pt-br-url]: https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.pt-br.md
+[commit-shield]: https://img.shields.io/github/last-commit/wesleymime/Adopet.svg?style=for-the-badge
+[commit-url]: https://github.com/wesleymime/Adopet/commit
+[license-shield]: https://img.shields.io/github/license/wesleymime/Adopet.svg?style=for-the-badge
+[license-url]: https://github.com/wesleymime/Adopet/blob/master/LICENSE.txt
+[workflow-shield]: https://img.shields.io/github/actions/workflow/status/wesleymime/Adopet/main.yml?style=for-the-badge
+[workflow-url]: https://img.shields.io/github/actions/workflow/status/wesleymime/Adopet/main.yml
+
+[java]: https://img.shields.io/badge/Java-000000?style=for-the-badge&logo=openjdk&logoColor=white
+[quarkus]: https://img.shields.io/badge/Quarkus-4695EB?style=for-the-badge&logo=quarkus&logoColor=white
+[postgresql]: https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white
+[docker]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
+[kubernetes]: https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white
+[oracle-cloud]: https://custom-icon-badges.demolab.com/badge/Oracle%20Cloud-F80000?logo=oracle&logoColor=white&style=for-the-badge
+[cloudflare]: https://img.shields.io/badge/Cloudflare-F38020?logo=Cloudflare&logoColor=white&style=for-the-badge
