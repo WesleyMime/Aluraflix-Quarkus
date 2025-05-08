@@ -11,17 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 19
-      uses: actions/setup-java@v1
+    - uses: actions/checkout@v4
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
       with:
-        java-version: 19
+        java-version: '21'
+        distribution: 'temurin'
 
     - name: Run jwt key scripts
       run: bash ./generate_jwtKeys.sh
 
     - name: Cache the Maven packages to speed up build
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
