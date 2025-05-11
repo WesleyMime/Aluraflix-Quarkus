@@ -10,12 +10,9 @@
 
 ![demo-api](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/df82bf93-e363-4fc8-a633-80be31c5f6a5)
 
-![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65) 
+## Descrição
 
-
-## Sobre o desafio proposto no Challenge Backend
-
-Plataforma para compartilhamento de vídeos. A plataforma deve permitir que o usuário monte playlists com links para seus vídeos favoritos, separados por categorias.
+Aluraflix é uma API REST que permite aos usuários criar playlists com links para seus vídeos favoritos, organizados por categorias.
 
 ## Objetivos do projeto
 
@@ -25,28 +22,35 @@ O projeto foi desenvolvido em sprints com duração 1 semana cada, que possuiam 
 - [Trello da Sprint 2](https://trello.com/b/5DavhAH7/alura-challenge-backend-semana-2)
 - [Trello da Sprint 3](https://trello.com/b/STIogyU7/alura-challenge-backend-semana-3)
 
+## Características principais
+
+- Operações de criar, ler, atualizar e excluir (CRUD) para vídeos e categorias.
+- Construído com **Quarkus** para aplicativos Java leves e de alto desempenho.
+- Usa **PostgreSQL** para armazenamento de dados relacionais confiáveis e escaláveis.
+- Totalmente contêinerzado com **Docker** para facilitar a implantação.
+- Orquestrado usando **Kubernetes** para escalabilidade e resiliência.
+
 ## Tecnologias
 
 ![java]
 ![quarkus]
+![swagger]
 ![postgresql]
 ![docker]
 ![kubernetes]
 ![oracle-cloud]
 ![cloudflare]
 
-
 ## Deploy
 
-
-A API Quarkus está em uma máquina virtual da Oracle Cloud Infrastructure, com DNS e HTTPS da Cloudflare.
+A API Quarkus está numa máquina virtual da Oracle Cloud Infrastructure, com DNS e HTTPS da Cloudflare.
 
 O link para acessar é:
 * API: https://aluraflix-api.marujo.site 
 
+![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65)
 
 ## Rode Localmente
-
 
 Para rodar é necessário ter Docker instalado.
 
@@ -65,14 +69,17 @@ cd Aluraflix-Quarkus
 docker compose up
 ```
 
-Se tudo estiver funcionando, os links para acessar são:
+### Uso
+
+Depois que o aplicativo estiver em execução, você pode usar a API e/ou o Front-end para gerenciar as listas de reprodução e categorias.
+
+Os links para o acesso são:
 - Front-end: http://localhost:8080
 - API: http://localhost
 
 ## Documentação
 
 A documentação feita no Postman pode ser acessada por esse [link](https://documenter.getpostman.com/view/19203694/2s8ZDa2MUK).
-
 
 ## Licença
 
@@ -83,15 +90,16 @@ Distribuído sob a licença do MIT. Consulte `LICENSE.txt` para obter mais infor
 [en-url]: https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.md
 [pt-br-shield]: https://img.shields.io/badge/lang-pt--br-lightdarkgreen.svg?style=for-the-badge
 [pt-br-url]: https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.pt-br.md
-[commit-shield]: https://img.shields.io/github/last-commit/wesleymime/Adopet.svg?style=for-the-badge
-[commit-url]: https://github.com/wesleymime/Adopet/commit
-[license-shield]: https://img.shields.io/github/license/wesleymime/Adopet.svg?style=for-the-badge
-[license-url]: https://github.com/wesleymime/Adopet/blob/master/LICENSE.txt
-[workflow-shield]: https://img.shields.io/github/actions/workflow/status/wesleymime/Adopet/main.yml?style=for-the-badge
-[workflow-url]: https://img.shields.io/github/actions/workflow/status/wesleymime/Adopet/main.yml
+[commit-shield]: https://img.shields.io/github/last-commit/wesleymime/Aluraflix-Quarkus.svg?style=for-the-badge
+[commit-url]: https://github.com/wesleymime/Aluraflix-Quarkus/commit
+[license-shield]: https://img.shields.io/github/license/wesleymime/Aluraflix-Quarkus.svg?style=for-the-badge
+[license-url]: https://github.com/wesleymime/Aluraflix-Quarkus/blob/master/LICENSE.txt
+[workflow-shield]: https://img.shields.io/github/actions/workflow/status/wesleymime/Aluraflix-Quarkus/main.yml?style=for-the-badge
+[workflow-url]: https://img.shields.io/github/actions/workflow/status/wesleymime/Aluraflix-Quarkus/main.yml
 
 [java]: https://img.shields.io/badge/Java-000000?style=for-the-badge&logo=openjdk&logoColor=white
 [quarkus]: https://img.shields.io/badge/Quarkus-4695EB?style=for-the-badge&logo=quarkus&logoColor=white
+[swagger]: https://img.shields.io/badge/swagger-85EA2D?logo=swagger&logoColor=black&style=for-the-badge
 [postgresql]: https://img.shields.io/badge/postgresql-4169E1?style=for-the-badge&logo=postgresql&logoColor=white
 [docker]: https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white
 [kubernetes]: https://img.shields.io/badge/kubernetes-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white
