@@ -10,11 +10,9 @@
 
 ![demo-api](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/df82bf93-e363-4fc8-a633-80be31c5f6a5)
 
-![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65)
+## Description
 
-## About the Challenge Backend
-
-Platform for sharing videos. The platform should allow the user to assemble playlists with links to their favorite videos, separated by categories.
+Aluraflix is a REST API that allows users to create playlists with links to their favorite videos, organized by categories.
 
 ## Project objectives
 
@@ -23,6 +21,14 @@ The project was developed in sprints lasting 1 week each, which had certain acti
 - [Sprint 1 Trello](https://trello.com/b/Mj5x6lMZ/alura-challenge-backend-semana-1)
 - [Sprint 2 Trello](https://trello.com/b/5DavhAH7/alura-challenge-backend-semana-2)
 - [Sprint 3 Trello](https://trello.com/b/STIogyU7/alura-challenge-backend-semana-3)
+
+## Key Features
+
+- Create, read, update, and delete (CRUD) operations for videos and categories.
+- Built with **Quarkus** for high-performance and lightweight Java applications.
+- Uses **PostgreSQL** for reliable and scalable relational data storage.
+- Fully containerized with **Docker** for easy deployment.
+- Orchestrated using **Kubernetes** for scalability and resilience.
 
 ## Technologies
 
@@ -36,15 +42,14 @@ The project was developed in sprints lasting 1 week each, which had certain acti
 
 ## Deploy
 
-
 The Quarkus API is running on an Oracle Cloud Infrastructure Virtual Machine, with DNS and HTTPS from Cloudflare.
 
 The link to access is:
 * API: https://aluraflix-api.marujo.site
 
+![demo-front](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/88115b77-3ac9-4885-876d-24a19e6bca65)
 
 ## Run locally
-
 
 To run locally you need to have Docker installed.
 
@@ -63,8 +68,9 @@ cd Aluraflix-Quarkus
 docker compose up
 ```
 
+Once deployed, you can use the API and/or the Front-end to manage playlists and categories.
 
-If everything is working, the links to access are:
+The links to access are:
 - Front-end: http://localhost:8080
 - API: http://localhost
 
@@ -83,11 +89,11 @@ Distributed under the MIT license. See `LICENSE.txt` for more information.
 [pt-br-shield]: https://img.shields.io/badge/lang-pt--br-lightdarkgreen.svg?style=for-the-badge
 [pt-br-url]: https://github.com/WesleyMime/Aluraflix-Quarkus/blob/main/README.pt-br.md
 [commit-shield]: https://img.shields.io/github/last-commit/wesleymime/Adopet.svg?style=for-the-badge
-[commit-url]: https://github.com/wesleymime/Adopet/commit
-[license-shield]: https://img.shields.io/github/license/wesleymime/Adopet.svg?style=for-the-badge
-[license-url]: https://github.com/wesleymime/Adopet/blob/master/LICENSE.txt
-[workflow-shield]: https://img.shields.io/github/actions/workflow/status/wesleymime/Adopet/main.yml?style=for-the-badge
-[workflow-url]: https://img.shields.io/github/actions/workflow/status/wesleymime/Adopet/main.yml
+[commit-url]: https://github.com/wesleymime/Aluraflix-Quarkus/commit
+[license-shield]: https://img.shields.io/github/license/wesleymime/Aluraflix-Quarkus.svg?style=for-the-badge
+[license-url]: https://github.com/wesleymime/Aluraflix-Quarkus/blob/master/LICENSE.txt
+[workflow-shield]: https://img.shields.io/github/actions/workflow/status/wesleymime/Aluraflix-Quarkus/main.yml?style=for-the-badge
+[workflow-url]: https://img.shields.io/github/actions/workflow/status/wesleymime/Aluraflix-Quarkus/main.yml
 
 [java]: https://img.shields.io/badge/Java-000000?style=for-the-badge&logo=openjdk&logoColor=white
 [quarkus]: https://img.shields.io/badge/Quarkus-4695EB?style=for-the-badge&logo=quarkus&logoColor=white
