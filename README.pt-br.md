@@ -6,6 +6,8 @@
 [![project_license][license-shield]][license-url]
 [![last-commit][commit-shield]][commit-url]
 ![workflow][workflow-shield]
+[![deploy][deploy-status]][deploy-url]
+
 </div>
 
 ![demo-api](https://github.com/WesleyMime/Aluraflix-Quarkus/assets/55067868/df82bf93-e363-4fc8-a633-80be31c5f6a5)
@@ -96,6 +98,8 @@ Distribuído sob a licença do MIT. Consulte `LICENSE.txt` para obter mais infor
 [license-url]: https://github.com/wesleymime/Aluraflix-Quarkus/blob/master/LICENSE.txt
 [workflow-shield]: https://img.shields.io/github/actions/workflow/status/wesleymime/Aluraflix-Quarkus/main.yml?style=for-the-badge
 [workflow-url]: https://img.shields.io/github/actions/workflow/status/wesleymime/Aluraflix-Quarkus/main.yml
+[deploy-status]: http://167.234.233.130:3001/api/badge/3/status?upColor=lightdarkgreen&style=for-the-badge
+[deploy-url]: https://aluraflix-api.marujo.site/
 
 [java]: https://img.shields.io/badge/Java-000000?style=for-the-badge&logo=openjdk&logoColor=white
 [quarkus]: https://img.shields.io/badge/Quarkus-4695EB?style=for-the-badge&logo=quarkus&logoColor=white
